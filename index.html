@@ -158,6 +158,38 @@
   dl.changes dt { font-weight: bold; margin-top: 10px; }
   dl.changes dd { margin: 2px 0 0; max-width: 62ch; }
 
+  dl.roadmap { margin: 0; }
+  dl.roadmap dt { font-weight: bold; margin-top: 12px; }
+  dl.roadmap dd { margin: 2px 0 0; max-width: 62ch; }
+
+  .status {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid var(--bevel-lo);
+    border-top-color: var(--bevel-hi);
+    border-left-color: var(--bevel-hi);
+    background: #d8d8d0;
+    color: #23262b;
+    padding: 1px 5px;
+    margin-right: 7px;
+    white-space: nowrap;
+    vertical-align: 1px;
+  }
+  .status.now      { background: #cfe0cf; }
+  .status.planned  { background: #d8d8d0; }
+  .status.question { background: var(--note); }
+
+  .goal {
+    background: var(--note);
+    border: 1px solid #c9b97a;
+    padding: 10px 12px;
+    margin: 0 0 14px;
+    max-width: 62ch;
+  }
+  .goal b { color: #7a5c00; }
+
   footer {
     max-width: 640px;
     margin: 14px auto 0;
@@ -228,6 +260,7 @@
     <a href="#what">What</a> |
     <a href="#why">Why</a> |
     <a href="#changes">Changes</a> |
+    <a href="#roadmap">Roadmap</a> |
     <a href="#specs">Specs</a> |
     <a href="#get">Get it</a> |
     <a href="#credits">Credits</a>
@@ -280,6 +313,36 @@
 
     <dt>Input latency</dt>
     <dd>Ongoing. The emulator frame queue is down from two buffered frames to zero; the gamepad MCU handshake no longer loses the controller after an unlucky resume. The remaining work needs a high-speed camera and a stopwatch, not a text editor.</dd>
+  </dl>
+
+  <hr class="thin">
+
+  <h2 id="roadmap">Roadmap</h2>
+
+  <p class="goal"><b>The goal:</b> a straight replacement for the stock Android install. Write the card, copy your games across, and every emulator is already configured correctly for this screen and this gamepad &mdash; no per-emulator fiddling, no hunting for the setting that makes the picture the right shape. Android on the Nova is plug and play; this should be too, and better at the one thing the device is for.</p>
+
+  <p>Everything below is intent, not promise. Ordered roughly by how much difference it would make.</p>
+
+  <dl class="roadmap">
+
+    <dt><span class="status planned">Planned</span>Replace sway</dt>
+    <dd>sway is a tiling compositor built for desktops with a keyboard and a pointer. On a 4:3 handheld driven by a d-pad and four face buttons it gets in the way &mdash; configuration dialogs in standalone emulators such as ARMSX2 open at sizes this panel cannot show, with no comfortable way to scroll, reach or dismiss them. What this device wants is something that does one fullscreen window at a fixed resolution and stays out of the way. It may not want a compositor at all, which is where this meets the latency work below.</dd>
+
+    <dt><span class="status planned">Planned</span>Native button glyphs</dt>
+    <dd>Emulator menus show whichever button labels their author picked, which is usually Xbox, on a handheld whose buttons are not Xbox. One setting to choose the layout you actually want &mdash; PlayStation shapes, GameCube, Xbox, Nintendo &mdash; and every prompt, menu and overlay drawing the right glyphs in the right positions from then on. Tedious rather than difficult, and the kind of thing that separates a tinkerer's build from something you hand to someone else.</dd>
+
+    <dt><span class="status now">In progress</span>More 4:3</dt>
+    <dd>The render geometry is corrected and integer scaling is on where the maths works out, but that is the easy half. Bezels and overlays are still drawn for 16:9, shader presets still assume a widescreen viewport, and there are more defaults carrying 1080p assumptions than the ones found so far. This is a long tail, not a single fix.</dd>
+
+    <dt><span class="status question">Open question</span>Input latency &mdash; without Wayland?</dt>
+    <dd>The emulator frame queue is already at zero. The larger question is whether the compositor can be taken out of the path entirely and emulators handed the display directly through KMS/DRM. Best case that removes a whole frame of latency. It also removes the thing that draws menus and overlays, so it may cost more than it buys. This gets decided with a 240&nbsp;fps camera and a stopwatch, not with an opinion &mdash; no measurements have been taken yet.</dd>
+
+    <dt><span class="status planned">Planned</span>Performance</dt>
+    <dd>GPU frequency and operating points, pinning emulator threads to the Cortex-X3 rather than letting the scheduler move them onto the little cores mid-frame, and governor tuning. The Nova has a Snapdragon 8 Gen 2 in it; the harder systems should be closer to comfortable than they currently are.</dd>
+
+    <dt><span class="status now">In progress</span>A build that does not waste hours</dt>
+    <dd>Partly landed. The Docker build image is now rebuilt only when its Dockerfile changes, rather than on every run &mdash; which also stops the host compiler drifting underneath the compiler cache and quietly invalidating it. There is an opt-in incremental mode that skips any package whose recipe has not changed, so a kernel patch no longer rebuilds every emulator in the tree. Builds are serialised, because two at once were overwriting each other's caches. And about 20&nbsp;MB and 447 unused package recipes of pre-fork leftovers have gone from the tree.</dd>
+
   </dl>
 
   <hr class="thin">
