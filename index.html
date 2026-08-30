@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PortareOS</title>
+<meta name="description" content="PortareOS is a personal fork of ROCKNIX for the Retroid Pocket Nova, tuned for its 1280x960 4:3 120Hz panel.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+<style>
+  :root {
+    --ground:  #b3b7bd;
+    --page:    #f4f4ef;
+    --ink:     #14161a;
+    --dim:     #4a5058;
+    --rule:    #7f858e;
+    --link:    #0000cc;
+    --visited: #551a8b;
+    --accent:  #a02020;
+    --bevel-hi: #ffffff;
+    --bevel-lo: #5a5f66;
+    --note:    #fdf6d8;
+
+    --body: Verdana, Geneva, "DejaVu Sans", sans-serif;
+    --mono: "Courier New", Courier, monospace;
+    --display: "VT323", "Courier New", monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background-color: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 13px;
+    line-height: 1.65;
+    margin: 0;
+    padding: 24px 12px 48px;
+  }
+
+  .window {
+    max-width: 640px;
+    margin: 0 auto;
+    background: var(--page);
+    border: 2px solid;
+    border-color: var(--bevel-hi) var(--bevel-lo) var(--bevel-lo) var(--bevel-hi);
+    padding: 18px 22px 26px;
+  }
+
+  .masthead { text-align: center; padding: 6px 0 2px; }
+
+  .wordmark {
+    font-family: var(--display);
+    font-size: 68px;
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .tagline {
+    font-size: 12px;
+    color: var(--dim);
+    margin: 6px 0 0;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    margin: 18px 0;
+  }
+  hr.thin { border-top: 1px dotted var(--rule); }
+
+  nav.toc { text-align: center; font-size: 12px; }
+  nav.toc a { margin: 0 2px; }
+
+  h2 {
+    font-family: var(--display);
+    font-size: 28px;
+    line-height: 1;
+    color: var(--accent);
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 16px 0 4px;
+    color: var(--dim);
+  }
+
+  p { margin: 0 0 10px; max-width: 62ch; }
+  ul { margin: 0 0 10px; padding-left: 22px; }
+  li { margin-bottom: 5px; }
+
+  a { color: var(--link); }
+  a:visited { color: var(--visited); }
+  a:focus-visible { outline: 2px dotted var(--accent); outline-offset: 2px; }
+
+  code, kbd {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: #e6e6df;
+    padding: 0 3px;
+  }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: #e6e6df;
+    border: 1px solid var(--rule);
+    padding: 8px 10px;
+    margin: 0 0 10px;
+    overflow-x: auto;
+  }
+  pre code { background: none; padding: 0; }
+
+  .construction {
+    background: var(--note);
+    border: 1px solid #b8a24a;
+    padding: 8px 12px;
+    font-size: 12px;
+    margin: 0 0 14px;
+  }
+  .construction strong { color: #7a5c00; }
+
+  .tablewrap { overflow-x: auto; margin: 0 0 10px; }
+  table {
+    border-collapse: collapse;
+    font-size: 12px;
+    width: 100%;
+  }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    padding-bottom: 4px;
+  }
+  th, td {
+    border: 1px solid var(--rule);
+    padding: 4px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #e0e0d8;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  dl.changes { margin: 0; }
+  dl.changes dt { font-weight: bold; margin-top: 10px; }
+  dl.changes dd { margin: 2px 0 0; max-width: 62ch; }
+
+  footer {
+    max-width: 640px;
+    margin: 14px auto 0;
+    font-size: 11px;
+    color: #3d434a;
+    text-align: center;
+    line-height: 1.8;
+  }
+  footer a { color: #14238a; }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin: 10px 0 8px;
+  }
+  .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.1;
+    width: 88px;
+    height: 31px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid var(--bevel-lo);
+    border-top-color: var(--bevel-hi);
+    border-left-color: var(--bevel-hi);
+    background: #d8d8d0;
+    color: #23262b;
+    text-decoration: none;
+  }
+  .badge b { font-size: 11px; }
+
+  .counter {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 3px;
+    background: #101014;
+    color: #40e060;
+    border: 1px solid var(--bevel-lo);
+    padding: 2px 6px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 520px) {
+    .wordmark { font-size: 48px; }
+    .window { padding: 14px 14px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="window">
+
+  <header class="masthead">
+    <h1 class="wordmark">PortareOS</h1>
+    <p class="tagline">A ROCKNIX fork for the Retroid Pocket Nova &mdash; and nothing else.</p>
+  </header>
+
+  <hr>
+
+  <nav class="toc">
+    <a href="#what">What</a> |
+    <a href="#why">Why</a> |
+    <a href="#changes">Changes</a> |
+    <a href="#specs">Specs</a> |
+    <a href="#get">Get it</a> |
+    <a href="#credits">Credits</a>
+  </nav>
+
+  <hr>
+
+  <p class="construction"><strong>UNDER CONSTRUCTION.</strong> Nothing has been released. There are no images to download, and none of the changes below have been tested on hardware yet. This page describes work in progress, honestly labelled as such.</p>
+
+  <h2 id="what">What this is</h2>
+
+  <p><b>PortareOS</b> is a personal fork of <a href="https://github.com/ROCKNIX/distribution">ROCKNIX</a>, which is itself a fork of <a href="https://github.com/JustEnoughLinuxOS/distribution">JELOS</a>. Nearly everything here is their work. This fork adds a thin layer of tuning for exactly one handheld: the <b>Retroid Pocket Nova</b>.</p>
+
+  <p>It is not a general-purpose distribution and does not want to be one. Only the SM8550 platform is built. Every other device is left untouched in the tree so the useful parts can go back upstream.</p>
+
+  <hr class="thin">
+
+  <h2 id="why">Why it exists</h2>
+
+  <p>In ROCKNIX the Nova shares its device tree and all of its emulator configuration with the Retroid Pocket 6. That is sensible from upstream's side &mdash; they are the same SoC &mdash; but the two handhelds do not have the same screen:</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Panel, by device</caption>
+      <tr><th>Retroid Pocket 6</th><td class="num">1080 &times; 1920 portrait &rarr; 1920 &times; 1080 in use, 16:9</td></tr>
+      <tr><th>Retroid Pocket Nova</th><td class="num">1280 &times; 960 landscape, 4:3, 120 Hz</td></tr>
+    </table>
+  </div>
+
+  <p>So a pile of defaults written for a 1080p 16:9 display land unexamined on a 4:3 one. Emulators render at 1920&times;1080 and get squeezed onto a screen that has 41% fewer pixels. That is the gap this fork closes.</p>
+
+  <p>There is a happier consequence too. <b>960 is exactly four times 240p, and twice 480p</b> &mdash; and almost every retro system is one or the other. Integer scaling on this panel is pixel-perfect and still fills the screen, which is normally a trade-off you have to pick between.</p>
+
+  <hr class="thin">
+
+  <h2 id="changes">What is different</h2>
+
+  <dl class="changes">
+    <dt>Display geometry</dt>
+    <dd>Render resolutions corrected from 1920&times;1080 to 1280&times;960 for Supermodel, Flycast and melonDS. Integer scaling enabled by default for the twenty systems whose native height divides cleanly into 960 &mdash; PS1, N64, NES, Mega Drive, PC Engine, Saturn, Dreamcast and friends.</dd>
+
+    <dt>120 Hz panel</dt>
+    <dd>The panel driver exposed a synthetic 60 Hz mode that the init sequence could pick by mistake, programming the panel for one refresh rate while the display controller drove another. Only 120 Hz is exposed now.</dd>
+
+    <dt>Deep suspend</dt>
+    <dd>Upstream gates deep suspend to devices where it has been validated, and the Nova was not on the list. It is here. Close the lid on a game, come back to it three seconds later.</dd>
+
+    <dt>microSD at full speed</dt>
+    <dd>The stock driver has an SDR104 tuning bug on this SoC, so the vendor device tree caps the card slot to legacy High Speed. Swapping in the downstream controller driver should take it from roughly 13 MB/s to 85 MB/s.</dd>
+
+    <dt>Input latency</dt>
+    <dd>Ongoing. The emulator frame queue is down from two buffered frames to zero; the gamepad MCU handshake no longer loses the controller after an unlucky resume. The remaining work needs a high-speed camera and a stopwatch, not a text editor.</dd>
+  </dl>
+
+  <hr class="thin">
+
+  <h2 id="specs">Hardware</h2>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Retroid Pocket Nova</caption>
+      <tr><th>SoC</th><td>Qualcomm QCS8550 &mdash; Snapdragon 8 Gen 2</td></tr>
+      <tr><th>CPU</th><td class="num">1 &times; Cortex-X3, 4 &times; A710/A715, 3 &times; A510</td></tr>
+      <tr><th>GPU</th><td>Adreno 740, Freedreno / Mesa</td></tr>
+      <tr><th>Display</th><td class="num">1280 &times; 960, 4:3, 120 Hz</td></tr>
+      <tr><th>Gamepad</th><td>rsinput MCU over UART</td></tr>
+      <tr><th>Kernel</th><td class="num">Linux 7.2.2</td></tr>
+    </table>
+  </div>
+
+  <hr class="thin">
+
+  <h2 id="get">Getting it</h2>
+
+  <p>There are no builds to download. If you want one, you build it:</p>
+
+  <pre><code>git clone https://github.com/portare-ch/distribution
+cd distribution
+make docker-SM8550</code></pre>
+
+  <p>Images land in <code>target/</code>. The build wants a container runtime, roughly 100&nbsp;GB of disk and several hours the first time through.</p>
+
+  <h3>One warning</h3>
+
+  <p>PortareOS uses its own boot partition label. That means the first image must be <b>written to the card as a fresh install</b> &mdash; an in-place update on top of an existing ROCKNIX installation will not find its boot partition. Updates between PortareOS builds work normally.</p>
+
+  <hr class="thin">
+
+  <h2 id="credits">Credits</h2>
+
+  <p>This project is a thin layer on a very deep stack. Thanks to <a href="https://github.com/ROCKNIX/distribution">ROCKNIX</a>, <a href="https://github.com/JustEnoughLinuxOS/distribution">JELOS</a>, LibreELEC, CoreELEC, and everyone whose emulators and drivers do the actual work.</p>
+
+  <p>Several of the SM8550 kernel patches carried here come from <a href="https://github.com/shuuri-labs/pocknix-os">pocknix-os</a> by shuuri-labs &mdash; the microSD work (originally Alex Ling, via Armbian), the gamepad MCU handshake and the panel refresh-rate fix among them. Authorship is preserved in every patch header.</p>
+
+  <p>For the upstream project, its community and its documentation, go to <a href="https://rocknix.org">rocknix.org</a>. Please do not take PortareOS problems to the ROCKNIX maintainers &mdash; they are mine.</p>
+
+</div>
+
+<footer>
+  <div class="badges">
+    <span class="badge"><b>1280&times;960</b>best viewed at</span>
+    <span class="badge"><b>NO JS</b>not one line</span>
+    <span class="badge"><b>4:3</b>forever</span>
+  </div>
+  <div>Visitors: <span class="counter">0000001</span> <span style="color:#5a5f66;">(it is not a real counter)</span></div>
+  <div>Last updated 30 August 2026 &middot; <a href="https://github.com/portare-ch/distribution">source on GitHub</a></div>
+  <div style="color:#5a5f66;">PortareOS is not affiliated with or endorsed by ROCKNIX or Retroid.</div>
+</footer>
+</body>
+</html>
