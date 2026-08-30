@@ -3,14 +3,43 @@
 The website for [PortareOS](https://github.com/portare-ch/distribution) — a personal fork of
 ROCKNIX for the Retroid Pocket Nova.
 
-One hand-written `index.html`. No build step, no dependencies, no JavaScript. The only
-external request is a Google Fonts stylesheet for VT323, used for the wordmark; everything
-else falls back to system typefaces.
+One hand-written `index.html`. No build step, no framework, **no JavaScript**. The only
+external request the page makes is a Google Fonts stylesheet for VT323, used for the
+wordmark; everything else falls back to system typefaces.
 
 Deliberately styled after a late-90s project page: fixed 640px column, bevelled panel,
 blue-and-purple links, horizontal rules, bordered tables. Two of the period tropes are
 literally true here — the page really is under construction, and the target hardware really
 is a 1280×960 4:3 display.
+
+## The visitor counter
+
+It is real, and it still involves no JavaScript. The two halves are separate:
+
+**Counting** is an image request, exactly as it was in 1997 — a 1×1 GIF from
+[GoatCounter](https://www.goatcounter.com), in a commented-out `<img>` at the bottom of
+`index.html`.
+
+**Displaying** happens at deploy time. `tools/bake-counter.sh` reads the running total back
+out of GoatCounter's API and writes it between the `<!--HITS-->` markers, so what the
+visitor loads is a plain static string. `.github/workflows/bake-counter.yml` runs it daily
+and commits the result.
+
+The number therefore lags by up to a day. That is not a defect — it is how a counter behaved
+when the webmaster regenerated the page by hand.
+
+### Turning it on
+
+1. Create a site at goatcounter.com and note your code (the `MYCODE` in
+   `MYCODE.goatcounter.com`).
+2. Uncomment the `<img>` at the bottom of `index.html` and replace `MYCODE`.
+3. In GoatCounter, create an API token with the *read statistics* scope.
+4. In this repository: set a variable `GOATCOUNTER_CODE` to your code, and a secret
+   `GOATCOUNTER_TOKEN` to the token.
+
+Until then the workflow skips without failing and the counter stays at `0000000`. If the API
+call fails on a later run the script leaves the page untouched rather than baking in a
+broken number.
 
 ## Deploying
 
