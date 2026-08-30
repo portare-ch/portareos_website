@@ -1,0 +1,40 @@
+name: Bake visitor counter
+
+# Rewrites the number between the <!--HITS--> markers in index.html from
+# GoatCounter's API, then commits it. The page stays a static file with no
+# JavaScript; the count simply lags by however often this runs.
+
+on:
+  schedule:
+    # Once a day, early morning UTC. Often enough to feel alive, rare enough
+    # that the commit log does not drown in counter bumps.
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+jobs:
+  bake:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bake the count into index.html
+        env:
+          GOATCOUNTER_CODE: ${{ vars.GOATCOUNTER_CODE }}
+          GOATCOUNTER_TOKEN: ${{ secrets.GOATCOUNTER_TOKEN }}
+        run: |
+          chmod +x tools/bake-counter.sh
+          tools/bake-counter.sh
+
+      - name: Commit if the number moved
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No change."
+            exit 0
+          fi
+          git config user.name "counter"
+          git config user.email "counter@users.noreply.github.com"
+          git add index.html
+          git commit -m "counter: $(grep -o '<!--HITS-->[0-9]*' index.html | cut -d'>' -f2-)"
+          git push
