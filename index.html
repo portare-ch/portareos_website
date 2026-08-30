@@ -349,7 +349,35 @@
 
   <h2 id="get">Getting it</h2>
 
-  <p>There are no builds to download. If you want one, you build it:</p>
+  <h3>1. Download</h3>
+
+  <p>Images are published at <a href="https://github.com/portare-ch/distribution/releases">github.com/portare-ch/distribution/releases</a>. Nothing is there yet. Until the first one is cut, build it yourself with the steps at the bottom of this section.</p>
+
+  <h3>2. Write the card</h3>
+
+  <p>PortareOS runs from a microSD card. Decompress the image and write it to the card. Any imaging tool will do, Raspberry Pi Imager and balenaEtcher included. From a Mac:</p>
+
+  <pre><code>gunzip PortareOS-SM8550.img.gz
+
+diskutil list                        # find the card
+diskutil unmountDisk /dev/disk4
+sudo dd if=PortareOS-SM8550.img of=/dev/rdisk4 bs=4m</code></pre>
+
+  <p><b>Check the device name twice before pressing return.</b> <code>dd</code> will overwrite whatever you point it at, including your own disk, without asking and without a way back. The number from <code>diskutil list</code> changes between reboots and between cards. On a Mac, <code>ctrl-T</code> prints progress; there is no output until it finishes otherwise.</p>
+
+  <p>On Linux the card is <code>/dev/sdX</code> or <code>/dev/mmcblk0</code>, and <code>dd</code> takes <code>bs=4M status=progress conv=fsync</code>.</p>
+
+  <h3>3. Boot it</h3>
+
+  <p>Put the card in with the handheld powered off, then hold <b>Volume Down</b> while powering on to reach the boot menu. Choose <b>Switch boot mode</b> with the volume keys, confirm with the power button, then press power again to start PortareOS.</p>
+
+  <p>If your Nova has no boot menu, its bootloader has to be replaced first, which is where <code>adb</code> and <code>fastboot</code> come in. On a Mac:</p>
+
+  <pre><code>brew install --cask android-platform-tools</code></pre>
+
+  <p>The procedure copies the <code>rocknix_abl</code> folder from the card to internal storage in Android, then runs <code>backup_abl.sh</code> and <code>flash_abl.sh</code> as root. Follow <a href="https://rocknix.org/devices/retroid/retroid-pocket-nova/">the ROCKNIX wiki page for this device</a> rather than these notes, since it is the one that gets corrected when the firmware changes. Getting this step wrong leaves the handheld unable to boot anything.</p>
+
+  <h3>4. Or build it yourself</h3>
 
   <pre><code>git clone https://github.com/portare-ch/distribution
 cd distribution
