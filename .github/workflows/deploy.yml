@@ -1,0 +1,56 @@
+name: Deploy site
+
+# One workflow does both jobs: bake the visitor count into index.html, then
+# publish to GitHub Pages. Deliberately NOT "deploy from a branch" with a
+# separate committing job - a push made with GITHUB_TOKEN does not create
+# workflow runs, so a counter commit would never trigger a Pages rebuild.
+# Baking and deploying in the same run sidesteps that entirely, and keeps
+# the git history free of daily "counter: 0000123" commits.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Daily. The counter lags by up to a day, which is the point.
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bake the visitor count into index.html
+        env:
+          GOATCOUNTER_CODE: ${{ vars.GOATCOUNTER_CODE }}
+          GOATCOUNTER_TOKEN: ${{ secrets.GOATCOUNTER_TOKEN }}
+        run: |
+          chmod +x tools/bake-counter.sh
+          tools/bake-counter.sh
+
+      - name: Assemble the site
+        run: |
+          mkdir -p _site
+          cp index.html CNAME _site/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
