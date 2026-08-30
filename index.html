@@ -316,7 +316,7 @@
     <dd>The render geometry is corrected and integer scaling is on where the maths works out, but that is the easy half. Bezels and overlays are still drawn for 16:9, shader presets still assume a widescreen viewport, and there are more defaults carrying 1080p assumptions than the ones found so far.</dd>
 
     <dt><span class="status question">Open question</span>Input latency without Wayland?</dt>
-    <dd>The emulator frame queue is already at zero. The larger question is whether the compositor can be taken out of the path entirely and emulators handed the display directly through KMS/DRM. Best case that removes a whole frame of latency. It also removes the thing that draws menus and overlays, so it may cost more than it buys. Deciding it needs a 240&nbsp;fps camera. No measurements have been taken yet.</dd>
+    <dd>The emulator frame queue is already at zero. The larger question is whether the compositor can be taken out of the path entirely and emulators handed the display directly through KMS/DRM. Best case that removes a whole frame of latency.</dd>
 
     <dt><span class="status planned">Planned</span>Performance</dt>
     <dd>GPU frequency and operating points, pinning emulator threads to the Cortex-X3 rather than letting the scheduler move them onto the little cores mid-frame, and governor tuning. The harder systems should run better than they currently do.</dd>
