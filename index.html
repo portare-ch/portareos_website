@@ -117,15 +117,6 @@
   }
   pre code { background: none; padding: 0; }
 
-  .construction {
-    background: var(--note);
-    border: 1px solid #b8a24a;
-    padding: 8px 12px;
-    font-size: 12px;
-    margin: 0 0 14px;
-  }
-  .construction strong { color: #7a5c00; }
-
   .tablewrap { overflow-x: auto; margin: 0 0 10px; }
   table {
     border-collapse: collapse;
@@ -268,13 +259,11 @@
 
   <hr>
 
-  <p class="construction"><strong>UNDER CONSTRUCTION.</strong> Nothing has been released. There are no images to download, and none of the changes below have been tested on hardware yet. This page describes work in progress, honestly labelled as such.</p>
-
   <h2 id="what">What this is</h2>
 
   <p><b>PortareOS</b> is a personal fork of <a href="https://github.com/ROCKNIX/distribution">ROCKNIX</a>, which is itself a fork of <a href="https://github.com/JustEnoughLinuxOS/distribution">JELOS</a>. Nearly everything here is their work. This fork adds a thin layer of tuning for exactly one handheld: the <b>Retroid Pocket Nova</b>.</p>
 
-  <p>It is not a general-purpose distribution. Only the SM8550 platform is built. Every other device is left untouched in the tree so the useful parts can go back upstream.</p>
+  <p>It is not a general-purpose distribution. Only the SM8550 platform is built.</p>
 
   <hr class="thin">
 
@@ -328,8 +317,8 @@
     <dt><span class="status planned">Planned</span>Replace sway</dt>
     <dd>sway is a tiling compositor built for desktops with a keyboard and a pointer. On a 4:3 handheld driven by a d-pad and four face buttons it gets in the way. Configuration dialogs in standalone emulators such as ARMSX2 open at sizes this panel cannot show, with no comfortable way to scroll, reach or dismiss them. The device needs something that draws one fullscreen window at a fixed resolution. It may not want a compositor at all, which is where this meets the latency work below.</dd>
 
-    <dt><span class="status planned">Planned</span>Native button glyphs</dt>
-    <dd>Emulator menus show whichever button labels their author picked, which is usually Xbox, on a handheld whose buttons are not Xbox. One setting to choose the layout: PlayStation shapes, GameCube, Xbox or Nintendo. Every prompt, menu and overlay draws the right glyphs in the right positions from then on.</dd>
+    <dt><span class="status planned">Planned</span>Button glyphs that match the buttons</dt>
+    <dd>The face buttons on the Nova can be physically swapped, so the glyphs drawn on screen and the buttons under your thumb can disagree about both symbol and position. A configurator to tell the system which set is fitted, covering the glyph style (PlayStation shapes, GameCube, Xbox, Nintendo) and the layout they sit in. Applied system-wide from there: the system menus first, and the emulators wherever they allow it.</dd>
 
     <dt><span class="status now">In progress</span>More 4:3</dt>
     <dd>The render geometry is corrected and integer scaling is on where the maths works out, but that is the easy half. Bezels and overlays are still drawn for 16:9, shader presets still assume a widescreen viewport, and there are more defaults carrying 1080p assumptions than the ones found so far.</dd>
