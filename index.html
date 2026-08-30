@@ -172,15 +172,6 @@
   .status.planned  { background: #d8d8d0; }
   .status.question { background: var(--note); }
 
-  .goal {
-    background: var(--note);
-    border: 1px solid #c9b97a;
-    padding: 10px 12px;
-    margin: 0 0 14px;
-    max-width: 62ch;
-  }
-  .goal b { color: #7a5c00; }
-
   footer {
     max-width: 640px;
     margin: 14px auto 0;
@@ -308,11 +299,12 @@
 
   <h2 id="roadmap">Roadmap</h2>
 
-  <p class="goal"><b>The goal:</b> a straight replacement for the stock Android install. Write the card, copy your games across, and every emulator is already configured correctly for this screen and this gamepad. No per-emulator fiddling, no hunting for the setting that makes the picture the right shape. Android on the Nova is plug and play; this should be too, and better at the one thing the device is for.</p>
-
   <p>Everything below is intent, not promise. Ordered roughly by how much difference it would make.</p>
 
   <dl class="roadmap">
+
+    <dt><span class="status planned">Planned</span>Every emulator configured on arrival</dt>
+    <dd>A straight replacement for the stock Android install: write the card, copy the games across, and every emulator is already set up for this handheld. Not generic defaults, but per-system settings picked for the Nova. Latency comes first, because that is what Android on this device is worst at, then performance and visuals wherever they can be had without being paid for in input lag.</dd>
 
     <dt><span class="status planned">Planned</span>Replace sway</dt>
     <dd>sway is a tiling compositor built for desktops with a keyboard and a pointer. On a 4:3 handheld driven by a d-pad and four face buttons it gets in the way. Configuration dialogs in standalone emulators such as ARMSX2 open at sizes this panel cannot show, with no comfortable way to scroll, reach or dismiss them. The device needs something that draws one fullscreen window at a fixed resolution. It may not want a compositor at all, which is where this meets the latency work below.</dd>
@@ -328,6 +320,9 @@
 
     <dt><span class="status planned">Planned</span>Performance</dt>
     <dd>GPU frequency and operating points, pinning emulator threads to the Cortex-X3 rather than letting the scheduler move them onto the little cores mid-frame, and governor tuning. The harder systems should run better than they currently do.</dd>
+
+    <dt><span class="status question">Open question</span>Audio stack</dt>
+    <dd>Untouched so far, and unmeasured. Worth finding out what the current pipeline costs in latency, and whether any of it can be shortened or taken out.</dd>
 
     <dt><span class="status now">In progress</span>A build that does not waste hours</dt>
     <dd>Partly landed. The Docker build image is now rebuilt only when its Dockerfile changes, rather than on every run, which also stops the host compiler drifting underneath the compiler cache and invalidating it. There is an opt-in incremental mode that skips any package whose recipe has not changed, so a kernel patch no longer rebuilds every emulator in the tree. Builds are serialised, because two at once were overwriting each other's caches. And about 20&nbsp;MB and 447 unused package recipes of pre-fork leftovers have gone from the tree.</dd>
