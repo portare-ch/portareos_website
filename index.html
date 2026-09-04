@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PortareOS</title>
-<meta name="description" content="PortareOS is a personal fork of ROCKNIX for the Retroid Pocket Nova, tuned for its 1280x960 4:3 120Hz panel.">
+<meta name="description" content="PortareOS is a Linux handheld distribution for the Retroid Pocket Nova, tuned for its 1280x960 4:3 120Hz panel.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
 <style>
   :root {
@@ -233,7 +233,7 @@
 
   <header class="masthead">
     <h1 class="wordmark">PortareOS</h1>
-    <p class="tagline">A ROCKNIX fork for the Retroid Pocket Nova, and nothing else.</p>
+    <p class="tagline">For the Retroid Pocket Nova, and nothing else.</p>
   </header>
 
   <hr>
@@ -260,7 +260,7 @@
 
   <h2 id="why">Why it exists</h2>
 
-  <p>In ROCKNIX the Nova shares its device tree and all of its emulator configuration with the Retroid Pocket 6. That is sensible from upstream's side, since they are the same SoC, but the two handhelds do not have the same screen:</p>
+  <p>Upstream, the Nova shares its device tree and all of its emulator configuration with the Retroid Pocket 6. That is sensible from upstream's side, since they are the same SoC, but the two handhelds do not have the same screen:</p>
 
   <div class="tablewrap">
     <table>
@@ -395,7 +395,7 @@ make docker-SM8550</code></pre>
 
   <h3 id="updating">Updating later</h3>
 
-  <p>There is no update server, and the built-in updater is switched off on purpose. The one it inherited pointed at ROCKNIX's server, which would answer a PortareOS device with ROCKNIX images: a different distribution, whose boot partition label no longer matches. The update would have downloaded, installed, and then not booted.</p>
+  <p>There is no update server, and the built-in updater is switched off on purpose. The one it inherited pointed upstream, which would answer a PortareOS device with images from a different distribution, whose boot partition label no longer matches. The update would have downloaded, installed, and then not booted.</p>
 
   <p>Updates are applied by hand instead. Put the <code>.tar</code> in <code>/storage/.update</code> on the handheld and reboot. The bootloader finds it there, replaces the kernel and system image, and clears up after itself. The device shares that folder on the network as <code>update</code>, so a file manager or <code>scp</code> will do; there is no need to take the card out.</p>
 
