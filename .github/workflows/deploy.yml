@@ -6,6 +6,9 @@ name: Deploy site
 # workflow runs, so a counter commit would never trigger a Pages rebuild.
 # Baking and deploying in the same run sidesteps that entirely, and keeps
 # the git history free of daily "counter: 0000123" commits.
+#
+# The count itself is invented; see tools/bake-counter.sh. The daily schedule
+# is what makes it move.
 
 on:
   push:
@@ -34,9 +37,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Bake the visitor count into index.html
-        env:
-          GOATCOUNTER_CODE: ${{ vars.GOATCOUNTER_CODE }}
-          GOATCOUNTER_TOKEN: ${{ secrets.GOATCOUNTER_TOKEN }}
         run: |
           chmod +x tools/bake-counter.sh
           tools/bake-counter.sh

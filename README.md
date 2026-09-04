@@ -30,31 +30,19 @@ Only `index.html` and `CNAME` are published; the README and `tools/` stay in the
 
 ## The visitor counter
 
-It is real, and it still involves no JavaScript. The two halves are separate:
+It is fake, and it involves no JavaScript.
 
-**Counting** is an image request, exactly as it was in 1997 — a 1×1 GIF from
-[GoatCounter](https://www.goatcounter.com), in a commented-out `<img>` at the bottom of
-`index.html`.
+There is no pixel, no analytics and no third party. A real count needs at least one of
+those, and the badge next to it says NO JS. `tools/bake-counter.sh` computes a number from
+the date at deploy time and writes it between the `<!--HITS-->` markers, so what the visitor
+loads is a plain static string.
 
-**Displaying** happens at deploy time. `tools/bake-counter.sh` reads the running total back
-out of GoatCounter's API and writes it between the `<!--HITS-->` markers, so what the
-visitor loads is a plain static string.
+It is deterministic: the same day always produces the same number, so a re-deploy never makes
+it jump or go backwards. The daily drift is larger than the jitter, which keeps it climbing.
+The daily schedule in the deploy workflow is what moves it.
 
-The number therefore lags by up to a day. That is not a defect — it is how a counter behaved
-when the webmaster regenerated the page by hand.
-
-### Turning it on
-
-1. Create a site at goatcounter.com and note your code (the `MYCODE` in
-   `MYCODE.goatcounter.com`).
-2. Uncomment the `<img>` at the bottom of `index.html` and replace `MYCODE`.
-3. In GoatCounter, create an API token with the *read statistics* scope.
-4. In this repository: set a variable `GOATCOUNTER_CODE` to your code, and a secret
-   `GOATCOUNTER_TOKEN` to the token.
-
-Until then the deploy still works, the bake step skips without failing, and the counter reads
-`0000000`. If the API call fails on a later run the script leaves the page untouched rather
-than baking in a broken number.
+This is decoration, in the same spirit as "best viewed at 1280x960". If you ever want real
+numbers, they need a real counter, and this script is not it.
 
 ## Editing
 
