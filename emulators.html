@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emulators and systems &middot; PortareOS</title>
+<meta name="description" content="Every emulator and system the PortareOS build wires up for the Retroid Pocket Nova, with dependencies and what is under review.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+<style>
+  :root {
+    --ground:  #b3b7bd;
+    --page:    #f4f4ef;
+    --ink:     #14161a;
+    --dim:     #4a5058;
+    --rule:    #7f858e;
+    --link:    #0000cc;
+    --visited: #551a8b;
+    --accent:  #a02020;
+    --bevel-hi: #ffffff;
+    --bevel-lo: #5a5f66;
+    --note:    #fdf6d8;
+
+    --body: Verdana, Geneva, "DejaVu Sans", sans-serif;
+    --mono: "Courier New", Courier, monospace;
+    --display: "VT323", "Courier New", monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background-color: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 13px;
+    line-height: 1.65;
+    margin: 0;
+    padding: 24px 12px 48px;
+  }
+
+  .window {
+    max-width: 880px;
+    margin: 0 auto;
+    background: var(--page);
+    border: 2px solid;
+    border-color: var(--bevel-hi) var(--bevel-lo) var(--bevel-lo) var(--bevel-hi);
+    padding: 18px 22px 26px;
+  }
+
+  .masthead { text-align: center; padding: 6px 0 2px; }
+
+  .wordmark {
+    font-family: var(--display);
+    font-size: 68px;
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    margin: 0;
+    text-wrap: balance;
+  }
+  .wordmark a { color: inherit; text-decoration: none; }
+
+  .tagline { font-size: 12px; color: var(--dim); margin: 6px 0 0; }
+
+  hr { border: 0; border-top: 1px solid var(--rule); margin: 18px 0; }
+  hr.thin { border-top: 1px dotted var(--rule); }
+
+  nav.toc { text-align: center; font-size: 12px; }
+  nav.toc a { margin: 0 2px; }
+
+  h2 {
+    font-family: var(--display);
+    font-size: 28px;
+    line-height: 1;
+    color: var(--accent);
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 16px 0 4px;
+    color: var(--dim);
+  }
+
+  p { margin: 0 0 10px; max-width: 68ch; }
+  ul { margin: 0 0 10px; padding-left: 22px; }
+  li { margin-bottom: 5px; }
+
+  a { color: var(--link); }
+  a:visited { color: var(--visited); }
+  a:focus-visible { outline: 2px dotted var(--accent); outline-offset: 2px; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: #e6e6df;
+    padding: 0 3px;
+  }
+
+  .tablewrap { overflow-x: auto; margin: 0 0 10px; }
+  table { border-collapse: collapse; font-size: 12px; width: 100%; }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    padding-bottom: 4px;
+  }
+  th, td {
+    border: 1px solid var(--rule);
+    padding: 4px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: #e0e0d8; font-weight: bold; white-space: nowrap; }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+  td.pkg { font-family: var(--mono); white-space: nowrap; }
+  td.dep { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+
+  .mark {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .m-keep { color: #2f5d2f; }
+  .m-look { color: #8a5a12; }
+  .m-go   { color: var(--accent); font-weight: bold; }
+
+  .note {
+    background: var(--note);
+    border: 1px solid var(--rule);
+    padding: 10px 14px;
+    margin: 0 0 12px;
+  }
+  .note p:last-child { margin-bottom: 0; }
+
+  .chips { margin: 8px 0 12px; }
+  .chip {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    border: 1px solid var(--rule);
+    background: #e6e6df;
+    padding: 1px 6px;
+    margin: 0 3px 4px 0;
+  }
+
+  footer {
+    max-width: 880px;
+    margin: 14px auto 0;
+    font-size: 11px;
+    color: #2b2f35;
+    text-align: center;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="window">
+
+  <header class="masthead">
+    <h1 class="wordmark"><a href="./">PortareOS</a></h1>
+    <p class="tagline">Emulators and systems, as the build actually wires them.</p>
+  </header>
+
+  <hr>
+
+  <nav class="toc">
+    <a href="./">Home</a> |
+    <a href="#standalone">The 35</a> |
+    <a href="#review">Under review</a> |
+    <a href="#sdl">SDL3</a> |
+    <a href="#retroarch">RetroArch only</a>
+  </nav>
+
+  <hr>
+
+  <h2>What this is</h2>
+
+  <p>An inventory of everything the SM8550 build sets up, kept here because the answer is not obvious from reading the source. The emulator list lives in one 1,558-line recipe of nested conditionals, and which of them apply depends on the device being built.</p>
+
+  <p>So this was not read by eye. The recipe's own <code>add_emu_core</code> and <code>add_es_system</code> calls were executed with the device set to SM8550 and the helpers stubbed out, and what came back is what follows. It is what the build wires, not what the file appears to say.</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>PortareOS on SM8550</caption>
+      <tr><th>Systems in EmulationStation</th><td class="num">137</td></tr>
+      <tr><th>Emulator packages built</th><td class="num">157</td></tr>
+      <tr><th>System and core pairings</th><td class="num">475</td></tr>
+      <tr><th>Distinct emulator front-ends</th><td class="num">39</td></tr>
+      <tr><th>Systems only RetroArch touches</th><td class="num">44</td></tr>
+    </table>
+  </div>
+
+  <p><b>122 of the 157 packages are libretro cores</b>, which share one RetroArch and cost very little each. The other 35 are where the dependencies are, so those are the ones worth arguing about.</p>
+
+  <hr class="thin">
+
+  <h2 id="standalone">The 35 that are not libretro cores</h2>
+
+  <p>Sorted by how many systems each one covers. The last column is a reading rather than a decision, and nothing here has been removed on the strength of it.</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Standalone emulators and launchers</caption>
+      <tr><th>Package</th><th>Sys</th><th>Covers</th><th>SDL</th><th>Pulls in</th><th>Read</th></tr>
+
+      <tr><td class="pkg">ares-sa</td><td class="num">38</td><td>arcade, famicom, gb, gba, n64, neogeo, msx, snes and more</td><td>SDL3</td><td class="dep">gtk3</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">mednafen</td><td class="num">38</td><td>psx, saturn, pce, lynx, ngp, virtualboy, snes and more</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">skyemu-sa</td><td class="num">8</td><td>gb, gba, gbc, nds</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-look">overlap</td></tr>
+      <tr><td class="pkg">dolphin-sa</td><td class="num">4</td><td>gamecube, wii, wiiware, triforce</td><td>SDL3</td><td class="dep">qt6</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">vice-sa</td><td class="num">4</td><td>c64, c128, c16, vic20</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">AdvanceMame</td><td class="num">3</td><td>cps1, cps2, cps3</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-look">overlap</td></tr>
+      <tr><td class="pkg">flycast-sa</td><td class="num">3</td><td>dreamcast, naomi, atomiswave</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">melonds-sa</td><td class="num">2</td><td>nds, ndsiware</td><td>SDL2</td><td class="dep">qt6</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">mupen64plus-sa</td><td class="num">2</td><td>n64, n64dd</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-look">three n64</td></tr>
+      <tr><td class="pkg">ppsspp-sa</td><td class="num">2</td><td>psp, pspminis</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">armsx2-sa</td><td class="num">1</td><td>ps2</td><td>SDL3</td><td class="dep">qt6, llvm</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">azahar-sa</td><td class="num">1</td><td>3ds</td><td>SDL2</td><td class="dep">qt6, boost</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">duckstation-sa</td><td class="num">1</td><td>psx</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">drastic-sa</td><td class="num">1</td><td>nds</td><td>none</td><td class="dep">closed source</td><td class="mark m-look">overlap</td></tr>
+      <tr><td class="pkg">gopher64-sa</td><td class="num">1</td><td>n64</td><td>SDL3</td><td class="dep">rust</td><td class="mark m-look">three n64</td></tr>
+      <tr><td class="pkg">nanoboyadvance-sa</td><td class="num">1</td><td>gba</td><td>SDL2</td><td class="dep">glew</td><td class="mark m-look">overlap</td></tr>
+      <tr><td class="pkg">yabasanshiro-sa</td><td class="num">1</td><td>saturn</td><td>SDL2</td><td class="dep">boost</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">supermodel-sa</td><td class="num">1</td><td>segamodel3</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">hypseus-singe</td><td class="num">1</td><td>daphne</td><td>SDL2</td><td class="dep">libmpeg2</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">amiberry</td><td class="num">1</td><td>amiga</td><td>SDL2</td><td class="dep">capsimg</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">hatarisa</td><td class="num">1</td><td>atarist</td><td>SDL2</td><td class="dep">portaudio</td><td class="mark m-look">niche</td></tr>
+      <tr><td class="pkg">scummvmsa</td><td class="num">1</td><td>scummvm</td><td>SDL2</td><td class="dep">fluidsynth</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">gzdoom-sa</td><td class="num">1</td><td>doom</td><td>SDL2</td><td class="dep">zmusic</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">openbor</td><td class="num">1</td><td>openbor</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">pico-8</td><td class="num">1</td><td>pico-8</td><td>SDL2</td><td class="dep">licence needed</td><td class="mark m-look">niche</td></tr>
+      <tr><td class="pkg">portmaster</td><td class="num">1</td><td>ports</td><td>none</td><td class="dep">gstreamer</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">bigpemu-sa</td><td class="num">1</td><td>atarijaguar</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-look">niche</td></tr>
+      <tr><td class="pkg">vita3k-sa</td><td class="num">1</td><td>psvita</td><td>SDL2</td><td class="dep">qt6, mesa</td><td class="mark m-look">ambitious</td></tr>
+      <tr><td class="pkg">gmu</td><td class="num">1</td><td>music</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
+      <tr><td class="pkg">mplayer</td><td class="num">1</td><td>mplayer</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-look">mpv exists</td></tr>
+      <tr><td class="pkg">rpcs3-sa</td><td class="num">1</td><td>ps3</td><td>SDL3</td><td class="dep">qt6, llvm</td><td class="mark m-go">under review</td></tr>
+      <tr><td class="pkg">xemu-sa</td><td class="num">1</td><td>xbox</td><td>SDL3</td><td class="dep">gtk3, python3</td><td class="mark m-go">under review</td></tr>
+      <tr><td class="pkg">touchhle-sa</td><td class="num">1</td><td>ios</td><td>SDL2</td><td class="dep">rust, sndio</td><td class="mark m-go">under review</td></tr>
+      <tr><td class="pkg">moonlight</td><td class="num">1</td><td>moonlight</td><td>SDL2</td><td class="dep">qt6, librga, rkmpp</td><td class="mark m-go">under review</td></tr>
+      <tr><td class="pkg">heroic</td><td class="num">1</td><td>heroic</td><td>none</td><td class="dep">needs wine</td><td class="mark m-go">under review</td></tr>
+      <tr><td class="pkg">wine</td><td class="num">1</td><td>windows</td><td>none</td><td class="dep">cups, libX*</td><td class="mark m-go">under review</td></tr>
+      <tr><td class="pkg">steam</td><td class="num">1</td><td>steam</td><td>none</td><td class="dep">fex-emu, gamescope, lsfg-vk, networkmanager</td><td class="mark m-go">under review</td></tr>
+    </table>
+  </div>
+
+  <hr class="thin">
+
+  <h2 id="review">What is under review</h2>
+
+  <h3>The x86 corner</h3>
+
+  <p>Four packages exist to run software this SoC cannot execute. <code>steam</code> alone brings in <code>fex-emu</code>, <code>gamescope</code>, <code>lsfg-vk</code>, <code>nss</code> and <code>networkmanager</code>. <code>wine</code> and <code>heroic</code> launch Windows titles through the same translation layer, and <code>box64</code> is the translator underneath.</p>
+
+  <p>Together they account for more build time and image size than every retro emulator on this page combined. Dropping them costs three systems: <code>steam</code>, <code>windows</code> and <code>heroic</code>. Nothing has been decided.</p>
+
+  <h3>A dependency that does not belong</h3>
+
+  <div class="note">
+    <p><code>moonlight</code> depends on <code>librga</code> and <code>rkmpp</code>. Those are <b>Rockchip</b> media libraries, and this is a Qualcomm SoC. Either they are dead weight in the dependency list or the package was never adjusted after the fork. Worth resolving either way, whether or not the package stays.</p>
+  </div>
+
+  <h3>Where several emulators cover one system</h3>
+
+  <p>Not waste in itself. A second emulator is often the one that runs the awkward title. But each is a package built, cached and shipped, so it is worth knowing where the stacking is.</p>
+
+  <div class="chips">
+    <span class="chip">n64: mupen64plus + gopher64 + ares + retroarch</span>
+    <span class="chip">nds: melonds + drastic + skyemu + retroarch</span>
+    <span class="chip">gb, gba, gbc: ares + mednafen + skyemu + nanoboyadvance + retroarch</span>
+    <span class="chip">saturn: yabasanshiro + mednafen + 2 cores</span>
+    <span class="chip">psx: duckstation + mednafen + 3 cores</span>
+  </div>
+
+  <h3>Widescreen assumptions</h3>
+
+  <p>No 16:9-only emulator has been found, and that is not the same as there being none. The three that shipped 1920&times;1080 render defaults, Supermodel, Flycast and melonDS, were corrected. Establishing that nothing else assumes a widescreen viewport means reading each emulator's shipped config for this handheld rather than its dependency list, which is a longer pass and has not been done.</p>
+
+  <hr class="thin">
+
+  <h2 id="sdl">SDL3</h2>
+
+  <p>Six packages already build against SDL3: <code>ares-sa</code>, <code>armsx2-sa</code>, <code>dolphin-sa</code>, <code>gopher64-sa</code>, <code>rpcs3-sa</code> and <code>xemu-sa</code>.</p>
+
+  <p>Moving the rest is not something the recipe can force. It depends on whether upstream supports SDL3 at all. The likeliest next candidates, because upstream has support in tree, are <code>ppsspp-sa</code>, <code>flycast-sa</code>, <code>duckstation-sa</code> and <code>scummvmsa</code>.</p>
+
+  <p>Three will never move: <code>drastic-sa</code> is a closed-source binary, <code>pico-8</code> is proprietary, and <code>bigpemu-sa</code> ships prebuilt.</p>
+
+  <hr class="thin">
+
+  <h2 id="retroarch">The 44 systems only RetroArch touches</h2>
+
+  <p>These have no standalone emulator at all. One libretro core each and nothing else, which makes them the cheapest things on the image and the last place to look for savings.</p>
+
+  <div class="chips">
+    <span class="chip">3do</span><span class="chip">amigacd32</span><span class="chip">amstradcpc</span><span class="chip">arduboy</span><span class="chip">atari2600</span><span class="chip">atari5200</span><span class="chip">atari7800</span><span class="chip">atari800</span><span class="chip">bbcmicro</span><span class="chip">bk</span><span class="chip">cdi</span><span class="chip">channelf</span><span class="chip">chip-8</span><span class="chip">easyrpg</span><span class="chip">fbn</span><span class="chip">gameandwatch</span><span class="chip">gp32</span><span class="chip">idtech</span><span class="chip">intellivision</span><span class="chip">macintosh</span><span class="chip">mame</span><span class="chip">megaduck</span><span class="chip">moto</span><span class="chip">msx2</span><span class="chip">neocd</span><span class="chip">odyssey2</span><span class="chip">palm</span><span class="chip">pc</span><span class="chip">pc-8800</span><span class="chip">pc-9800</span><span class="chip">pet</span><span class="chip">pokemini</span><span class="chip">scv</span><span class="chip">supervision</span><span class="chip">tic-80</span><span class="chip">uzebox</span><span class="chip">vectrex</span><span class="chip">videopac</span><span class="chip">vircon32</span><span class="chip">wasm4</span><span class="chip">x1</span><span class="chip">x68000</span><span class="chip">zmachine</span><span class="chip">zx81</span>
+  </div>
+
+  <hr class="thin">
+
+  <p><a href="./">Back to the front page</a></p>
+
+</div>
+
+<footer>
+  Counted from <code>virtual/emulators/package.mk</code> on <code>next</code> &middot;
+  <a href="https://github.com/portare-ch/distribution">source on GitHub</a>
+</footer>
+
+</body>
+</html>
