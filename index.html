@@ -293,6 +293,21 @@
 
     <dt>Input latency</dt>
     <dd>Ongoing. The emulator frame queue is down from two buffered frames to zero; the gamepad MCU handshake no longer loses the controller after an unlucky resume.</dd>
+
+    <dt>Audio latency</dt>
+    <dd>The audio server shipped with a <b>20&nbsp;ms floor</b>, applied by patch, that no application could get below. It was almost certainly chosen to stop crackling rather than because 20&nbsp;ms was wanted, and nobody had gone back to it. It is now <b>5.3&nbsp;ms</b>, and Dolphin asks for a buffer that small rather than the 10&nbsp;ms it used to.</dd>
+
+    <dt>One audio path, not three</dt>
+    <dd>Everything spoke the PulseAudio protocol to a server that is not PulseAudio. SDL, RetroArch, mpv and the frontend now talk to PipeWire directly. RetroArch was reaching the same graph through the ALSA compatibility plugin, which was a layer nobody had asked for either. Volume control is native too. Only Dolphin still needs the compatibility layer, because the library it plays through has no PipeWire backend at all.</dd>
+
+    <dt>Windows open fullscreen</dt>
+    <dd>Configuration dialogs in standalone emulators used to open at sizes this panel cannot show, with no way to reach or dismiss them. Every window now opens fullscreen on the one output, and Guide+B closes it. A stopgap rather than the fix below, but the difference between usable and not.</dd>
+
+    <dt>Less of it</dt>
+    <dd>The frontend played its preview video through VLC, built with three video encoders and a media player binary nothing ran, for a job mpv was already installed to do. VLC is gone. So are AetherSX2, which was an unmaintained appimage shadowing armsx2, and Cemu, which had no usable 4:3 mode on a 4:3 handheld. Dolphin is 364 commits newer.</dd>
+
+    <dt>English only</dt>
+    <dd>The frontend carried 3.4&nbsp;MB of interface translations in 35 languages. A wrong string in Occitan is indistinguishable from a right one from here, so shipping them was a claim that could not be backed. The language setting stays and still picks the language of scraped metadata.</dd>
   </dl>
 
   <hr class="thin">
@@ -307,7 +322,7 @@
     <dd>A straight replacement for the stock Android install: write the card, copy the games across, and every emulator is already set up for this handheld. Not generic defaults, but per-system settings picked for the Nova. Latency comes first, because that is what Android on this device is worst at, then performance and visuals wherever they can be had without being paid for in input lag.</dd>
 
     <dt><span class="status planned">Planned</span>Replace sway</dt>
-    <dd>sway is a tiling compositor built for desktops with a keyboard and a pointer. On a 4:3 handheld driven by a d-pad and four face buttons it gets in the way. Configuration dialogs in standalone emulators such as ARMSX2 open at sizes this panel cannot show, with no comfortable way to scroll, reach or dismiss them. The device needs something that draws one fullscreen window at a fixed resolution. It may not want a compositor at all, which is where this meets the latency work below.</dd>
+    <dd>sway is a tiling compositor built for desktops with a keyboard and a pointer. On a 4:3 handheld driven by a d-pad and four face buttons it gets in the way. Configuration dialogs in standalone emulators such as ARMSX2 open at sizes this panel cannot show, with no comfortable way to scroll, reach or dismiss them. The device needs something that draws one fullscreen window at a fixed resolution. It may not want a compositor at all, which is where this meets the latency work below. In the meantime every window is forced fullscreen and Guide+B closes it, which makes those dialogs reachable without answering the larger question.</dd>
 
     <dt><span class="status planned">Planned</span>Button glyphs that match the buttons</dt>
     <dd>The face buttons on the Nova can be physically swapped, so the glyphs drawn on screen and the buttons under your thumb can disagree about both symbol and position. A configurator to tell the system which set is fitted, covering the glyph style (PlayStation shapes, GameCube, Xbox, Nintendo) and the layout they sit in. Applied system-wide from there: the system menus first, and the emulators wherever they allow it.</dd>
@@ -321,8 +336,8 @@
     <dt><span class="status planned">Planned</span>Performance</dt>
     <dd>GPU frequency and operating points, pinning emulator threads to the Cortex-X3 rather than letting the scheduler move them onto the little cores mid-frame, and governor tuning. The harder systems should run better than they currently do.</dd>
 
-    <dt><span class="status question">Open question</span>Audio stack</dt>
-    <dd>Untouched so far, and unmeasured. Worth finding out what the current pipeline costs in latency, and whether any of it can be shortened or taken out.</dd>
+    <dt><span class="status now">In progress</span>Audio stack</dt>
+    <dd>Mostly landed, and it turned out to be worth the look. The 20&nbsp;ms floor is down to 5.3&nbsp;ms and the compatibility layer is out of every path but Dolphin's. What is left is measurement on the device rather than more reading: whether 5.3&nbsp;ms holds under a hard emulator without crackling, and whether the audio threads are really running at realtime priority or only appear to be.</dd>
 
     <dt><span class="status now">In progress</span>A build that does not waste hours</dt>
     <dd>Partly landed. The Docker build image is now rebuilt only when its Dockerfile changes, rather than on every run, which also stops the host compiler drifting underneath the compiler cache and invalidating it. There is an opt-in incremental mode that skips any package whose recipe has not changed, so a kernel patch no longer rebuilds every emulator in the tree. Builds are serialised, because two at once were overwriting each other's caches. And about 20&nbsp;MB and 447 unused package recipes of pre-fork leftovers have gone from the tree.</dd>
@@ -351,7 +366,7 @@
 
   <h3>1. Download</h3>
 
-  <p>Builds are published at <a href="https://github.com/portare-ch/distribution/releases">github.com/portare-ch/distribution/releases</a>. The first is <a href="https://github.com/portare-ch/distribution/releases/tag/nightly-20260904-31">nightly-20260904-31</a>, from 4 September 2026.</p>
+  <p>Builds are published at <a href="https://github.com/portare-ch/distribution/releases">github.com/portare-ch/distribution/releases</a>. The newest is <a href="https://github.com/portare-ch/distribution/releases/tag/nightly-20260908-37">nightly-20260908-37</a>. Each release page now lists what changed since the one before it, so you can see whether a build is worth the download.</p>
 
   <p>Each build has two files. <code>PortareOS-SM8550.aarch64-<i>date</i>.img.gz</code> is the full image, around 1.5&nbsp;GB, and is the one you write to a card. <code>PortareOS-SM8550.aarch64-<i>date</i>.tar</code> is the same build packaged for a Nova that already runs PortareOS, covered under <a href="#updating">updating later</a>.</p>
 
@@ -359,7 +374,7 @@
 
   <pre><code>shasum -a 256 -c PortareOS-SM8550.aarch64-20260904.img.gz.sha256</code></pre>
 
-  <p>On Linux that is <code>sha256sum -c</code>. Builds are marked as pre-releases, which is accurate rather than modest: one person, one device, no test lab.</p>
+  <p>On Linux that is <code>sha256sum -c</code>. One early build did ship a corrupt image, which is what taught this page to say so; every release is now checksummed before it is published, and a build that does not match is refused rather than uploaded. Builds are marked as pre-releases, which is accurate rather than modest: one person, one device, no test lab.</p>
 
   <h3>2. Write the card</h3>
 
@@ -395,9 +410,9 @@ make docker-SM8550</code></pre>
 
   <h3 id="updating">Updating later</h3>
 
-  <p>There is no update server, and the built-in updater is switched off on purpose. The one it inherited pointed upstream, which would answer a PortareOS device with images from a different distribution, whose boot partition label no longer matches. The update would have downloaded, installed, and then not booted.</p>
+  <p>There is still no update server. The updater it inherited pointed at upstream, which would answer a PortareOS device with images from a different distribution, whose boot partition label no longer matches: downloaded, installed, and then would not boot.</p>
 
-  <p>Updates are applied by hand instead. Put the <code>.tar</code> in <code>/storage/.update</code> on the handheld and reboot. The bootloader finds it there, replaces the kernel and system image, and clears up after itself. The device shares that folder on the network as <code>update</code>, so a file manager or <code>scp</code> will do; there is no need to take the card out.</p>
+  <p>So the updater now looks at your storage instead of the network. Put the <code>.tar</code> in a folder called <b><code>UPD</code></b> and the handheld finds it. Internal storage or a second card, either works, and the folder can sit at the top of the card so you can drop the file in from a computer without a network share. The frontend offers the update, stages it, and asks you to reboot to apply.</p>
 
   <p>Do not unpack the <code>.tar</code> first, and do not try to install from it. It holds a kernel and a system image, not a partition table, so it can only update a card that PortareOS already wrote.</p>
 
@@ -423,8 +438,8 @@ make docker-SM8550</code></pre>
     <span class="badge"><b>NO JS</b>not one line</span>
     <span class="badge"><b>4:3</b>forever</span>
   </div>
-  <div>Visitors: <span class="counter"><!--HITS-->0001069<!--/HITS--></span></div>
-  <div>Last updated 4 September 2026 &middot; <a href="https://github.com/portare-ch/distribution">source on GitHub</a></div>
+  <div>Visitors: <span class="counter"><!--HITS-->0001247<!--/HITS--></span></div>
+  <div>Last updated 8 September 2026 &middot; <a href="https://github.com/portare-ch/distribution">source on GitHub</a></div>
 
   <div style="color:#5a5f66;">PortareOS is not affiliated with or endorsed by ROCKNIX or Retroid.</div>
 </footer>
