@@ -41,10 +41,15 @@ jobs:
           chmod +x tools/bake-counter.sh
           tools/bake-counter.sh
 
+      # Every page at the root, not a list of filenames. Naming them meant
+      # emulators.html was written, merged, and then served as a 404, because
+      # publishing a new page silently needed an edit here as well.
       - name: Assemble the site
         run: |
           mkdir -p _site
-          cp index.html CNAME _site/
+          cp ./*.html CNAME _site/
+          echo "publishing:"
+          ls -1 _site
 
       - uses: actions/configure-pages@v5
 
