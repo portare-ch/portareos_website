@@ -248,7 +248,7 @@
       <tr><td class="pkg">moonlight</td><td class="num">1</td><td>moonlight</td><td>SDL2</td><td class="dep">qt6, librga, rkmpp</td><td class="mark m-go">under review</td></tr>
       <tr><td class="pkg">heroic</td><td class="num">1</td><td>heroic</td><td>none</td><td class="dep">needs wine</td><td class="mark m-go">under review</td></tr>
       <tr><td class="pkg">wine</td><td class="num">1</td><td>windows</td><td>none</td><td class="dep">cups, libX*</td><td class="mark m-go">under review</td></tr>
-      <tr><td class="pkg">steam</td><td class="num">1</td><td>steam</td><td>none</td><td class="dep">fex-emu, gamescope, lsfg-vk, networkmanager</td><td class="mark m-go">under review</td></tr>
+      <tr><td class="pkg">steam</td><td class="num">1</td><td>steam</td><td>none</td><td class="dep">fex-emu, gamescope, lsfg-vk, networkmanager</td><td class="mark m-keep">keep</td></tr>
     </table>
   </div>
 
@@ -258,9 +258,15 @@
 
   <h3>The x86 corner</h3>
 
-  <p>Four packages exist to run software this SoC cannot execute. <code>steam</code> alone brings in <code>fex-emu</code>, <code>gamescope</code>, <code>lsfg-vk</code>, <code>nss</code> and <code>networkmanager</code>. <code>wine</code> and <code>heroic</code> launch Windows titles through the same translation layer, and <code>box64</code> is the translator underneath.</p>
+  <p>Four packages exist to run software this SoC cannot execute, and between them they carry the heaviest dependencies on the image. <code>steam</code> brings in <code>fex-emu</code>, <code>gamescope</code>, <code>lsfg-vk</code>, <code>nss</code> and <code>networkmanager</code>. <code>wine</code> and <code>heroic</code> launch Windows titles, and <code>box64</code> is a second translator underneath them.</p>
 
-  <p>Together they account for more build time and image size than every retro emulator on this page combined. Dropping them costs three systems: <code>steam</code>, <code>windows</code> and <code>heroic</code>. Nothing has been decided.</p>
+  <p><b>Steam stays.</b> A large part of the PC library from before the mid-2000s is natively 4:3, and this is one of the few handhelds where those games display the way they were drawn rather than pillarboxed. That is the same argument the rest of this fork is built on, pointed at a different library.</p>
+
+  <p>Which leaves a narrower question than the one this section started with.</p>
+
+  <div class="note">
+    <p><b>Two x86 translators.</b> Keeping Steam keeps <code>fex-emu</code>, and <code>box64</code> does the same job by a different route. One image carrying both is worth understanding before either is defended: whether <code>wine</code> can sit on <code>fex-emu</code>, or whether the two translators cover cases the other cannot.</p>
+  </div>
 
   <h3>A dependency that does not belong</h3>
 
