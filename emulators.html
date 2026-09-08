@@ -245,7 +245,7 @@
       <tr><td class="pkg">rpcs3-sa</td><td class="num">1</td><td>ps3</td><td>SDL3</td><td class="dep">qt6, llvm</td><td class="mark m-go">under review</td></tr>
       <tr><td class="pkg">xemu-sa</td><td class="num">1</td><td>xbox</td><td>SDL3</td><td class="dep">gtk3, python3</td><td class="mark m-go">under review</td></tr>
       <tr><td class="pkg">touchhle-sa</td><td class="num">1</td><td>ios</td><td>SDL2</td><td class="dep">rust, sndio</td><td class="mark m-go">under review</td></tr>
-      <tr><td class="pkg">moonlight</td><td class="num">1</td><td>moonlight</td><td>SDL2</td><td class="dep">qt6, librga, rkmpp</td><td class="mark m-go">under review</td></tr>
+      <tr><td class="pkg">moonlight</td><td class="num">1</td><td>moonlight</td><td>SDL2</td><td class="dep">opus, enet, avahi, ffmpeg</td><td class="mark m-keep">keep</td></tr>
       <tr><td class="pkg">heroic</td><td class="num">1</td><td>heroic</td><td>none</td><td class="dep">needs wine</td><td class="mark m-go">under review</td></tr>
       <tr><td class="pkg">wine</td><td class="num">1</td><td>windows</td><td>none</td><td class="dep">cups, libX*</td><td class="mark m-go">under review</td></tr>
       <tr><td class="pkg">steam</td><td class="num">1</td><td>steam</td><td>none</td><td class="dep">fex-emu, gamescope, lsfg-vk, networkmanager</td><td class="mark m-keep">keep</td></tr>
@@ -268,11 +268,11 @@
     <p><b>Two x86 translators.</b> Keeping Steam keeps <code>fex-emu</code>, and <code>box64</code> does the same job by a different route. One image carrying both is worth understanding before either is defended: whether <code>wine</code> can sit on <code>fex-emu</code>, or whether the two translators cover cases the other cannot.</p>
   </div>
 
-  <h3>A dependency that does not belong</h3>
+  <h3>Branches for hardware that is not here</h3>
 
-  <div class="note">
-    <p><code>moonlight</code> depends on <code>librga</code> and <code>rkmpp</code>. Those are <b>Rockchip</b> media libraries, and this is a Qualcomm SoC. Either they are dead weight in the dependency list or the package was never adjusted after the fork. Worth resolving either way, whether or not the package stays.</p>
-  </div>
+  <p>An earlier version of this page said <code>moonlight</code> pulls in the Rockchip media libraries <code>librga</code> and <code>rkmpp</code>. That was wrong, and wrong in an instructive way: those lines exist in the recipe but sit behind <code>if [[ "${DEVICE}" == RK* ]]</code>, so they were never applied here. Reading a recipe's dependency lines without evaluating its conditionals is exactly the mistake this page was built to avoid.</p>
+
+  <p>Two dead branches were found while checking. The Rockchip one above, and a <code>moonlight-qt</code> build gated on the architecture being the literal string <code>null</code>, which it never is, so <code>qt6</code> was never a dependency either. Both are gone, and the package is updated from a pin two years old to v2.7.1.</p>
 
   <h3>Where several emulators cover one system</h3>
 
