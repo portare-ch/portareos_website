@@ -191,19 +191,19 @@
   <div class="tablewrap">
     <table>
       <caption>PortareOS on SM8550</caption>
-      <tr><th>Systems in EmulationStation</th><td class="num">137</td></tr>
-      <tr><th>Emulator packages built</th><td class="num">157</td></tr>
-      <tr><th>System and core pairings</th><td class="num">475</td></tr>
-      <tr><th>Distinct emulator front-ends</th><td class="num">39</td></tr>
+      <tr><th>Systems in EmulationStation</th><td class="num">136</td></tr>
+      <tr><th>Emulator packages built</th><td class="num">154</td></tr>
+      <tr><th>System and core pairings</th><td class="num">471</td></tr>
+      <tr><th>Distinct emulator front-ends</th><td class="num">35</td></tr>
       <tr><th>Systems only RetroArch touches</th><td class="num">44</td></tr>
     </table>
   </div>
 
-  <p><b>122 of the 157 packages are libretro cores</b>, which share one RetroArch and cost very little each. The other 35 are where the dependencies are, so those are the ones worth arguing about.</p>
+  <p><b>122 of the 154 packages are libretro cores</b>, which share one RetroArch and cost very little each. The other 32 are where the dependencies are, so those are the ones worth arguing about.</p>
 
   <hr class="thin">
 
-  <h2 id="standalone">The 35 that are not libretro cores</h2>
+  <h2 id="standalone">The 32 that are not libretro cores</h2>
 
   <p>Sorted by how many systems each one covers. The last column is a reading rather than a decision, and nothing here has been removed on the strength of it.</p>
 
@@ -225,7 +225,6 @@
       <tr><td class="pkg">armsx2-sa</td><td class="num">1</td><td>ps2</td><td>SDL3</td><td class="dep">qt6, llvm</td><td class="mark m-keep">keep</td></tr>
       <tr><td class="pkg">azahar-sa</td><td class="num">1</td><td>3ds</td><td>SDL2</td><td class="dep">qt6, boost</td><td class="mark m-keep">keep</td></tr>
       <tr><td class="pkg">duckstation-sa</td><td class="num">1</td><td>psx</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">drastic-sa</td><td class="num">1</td><td>nds</td><td>none</td><td class="dep">closed source</td><td class="mark m-look">overlap</td></tr>
       <tr><td class="pkg">gopher64-sa</td><td class="num">1</td><td>n64</td><td>SDL3</td><td class="dep">rust</td><td class="mark m-look">three n64</td></tr>
       <tr><td class="pkg">nanoboyadvance-sa</td><td class="num">1</td><td>gba</td><td>SDL2</td><td class="dep">glew</td><td class="mark m-look">overlap</td></tr>
       <tr><td class="pkg">yabasanshiro-sa</td><td class="num">1</td><td>saturn</td><td>SDL2</td><td class="dep">boost</td><td class="mark m-keep">keep</td></tr>
@@ -238,13 +237,11 @@
       <tr><td class="pkg">openbor</td><td class="num">1</td><td>openbor</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
       <tr><td class="pkg">pico-8</td><td class="num">1</td><td>pico-8</td><td>SDL2</td><td class="dep">licence needed</td><td class="mark m-look">niche</td></tr>
       <tr><td class="pkg">portmaster</td><td class="num">1</td><td>ports</td><td>none</td><td class="dep">gstreamer</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">bigpemu-sa</td><td class="num">1</td><td>atarijaguar</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-look">niche</td></tr>
       <tr><td class="pkg">vita3k-sa</td><td class="num">1</td><td>psvita</td><td>SDL2</td><td class="dep">qt6, mesa</td><td class="mark m-look">ambitious</td></tr>
       <tr><td class="pkg">gmu</td><td class="num">1</td><td>music</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
       <tr><td class="pkg">mplayer</td><td class="num">1</td><td>mplayer</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-look">mpv exists</td></tr>
       <tr><td class="pkg">rpcs3-sa</td><td class="num">1</td><td>ps3</td><td>SDL3</td><td class="dep">qt6, llvm</td><td class="mark m-go">under review</td></tr>
       <tr><td class="pkg">xemu-sa</td><td class="num">1</td><td>xbox</td><td>SDL3</td><td class="dep">gtk3, python3</td><td class="mark m-go">under review</td></tr>
-      <tr><td class="pkg">touchhle-sa</td><td class="num">1</td><td>ios</td><td>SDL2</td><td class="dep">rust, sndio</td><td class="mark m-go">under review</td></tr>
       <tr><td class="pkg">moonlight</td><td class="num">1</td><td>moonlight</td><td>SDL2</td><td class="dep">opus, enet, avahi, ffmpeg</td><td class="mark m-keep">keep</td></tr>
       <tr><td class="pkg">heroic</td><td class="num">1</td><td>heroic</td><td>none</td><td class="dep">needs wine</td><td class="mark m-go">under review</td></tr>
       <tr><td class="pkg">wine</td><td class="num">1</td><td>windows</td><td>none</td><td class="dep">cups, libX*</td><td class="mark m-go">under review</td></tr>
@@ -280,7 +277,7 @@
 
   <div class="chips">
     <span class="chip">n64: mupen64plus + gopher64 + ares + retroarch</span>
-    <span class="chip">nds: melonds + drastic + skyemu + retroarch</span>
+    <span class="chip">nds: melonds + skyemu + retroarch</span>
     <span class="chip">gb, gba, gbc: ares + mednafen + skyemu + nanoboyadvance + retroarch</span>
     <span class="chip">saturn: yabasanshiro + mednafen + 2 cores</span>
     <span class="chip">psx: duckstation + mednafen + 3 cores</span>
@@ -289,6 +286,10 @@
   <h3>Widescreen assumptions</h3>
 
   <p>No 16:9-only emulator has been found, and that is not the same as there being none. The three that shipped 1920&times;1080 render defaults, Supermodel, Flycast and melonDS, were corrected. Establishing that nothing else assumes a widescreen viewport means reading each emulator's shipped config for this handheld rather than its dependency list, which is a longer pass and has not been done.</p>
+
+  <h3>Removed</h3>
+
+  <p>Four have gone since this page was first written. <code>drastic</code> and <code>bigpemu</code> sat behind emulators that were already the default for their systems. <code>daedalusx64</code> was 32-bit only, so it appeared in the menu on a 64-bit build without ever being built. <code>touchhle</code> took the <code>ios</code> system with it, being the only thing that ran it, and <code>sndio</code> left at the same time as the only package that pulled it in.</p>
 
   <hr class="thin">
 
