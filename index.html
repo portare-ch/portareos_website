@@ -299,6 +299,22 @@
 
   details > :last-child { margin-bottom: 2px; }
 
+  figure.shot { margin: 12px 0 14px; }
+  figure.shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+    background: #000;
+  }
+  figure.shot figcaption {
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--dim);
+    margin-top: 5px;
+    max-width: 62ch;
+  }
+
   @media (max-width: 520px) {
     .wordmark { font-size: 48px; }
     .window { padding: 14px 14px 20px; }
@@ -326,6 +342,7 @@
 
   <nav class="toc">
     <a href="#why">Why</a> |
+    <a href="#look">Photos</a> |
     <a href="#different">What is different</a> |
     <a href="#rules">Rules</a> |
     <a href="#get">Install</a> |
@@ -350,6 +367,25 @@
     <div class="quickfact"><b>KMS ONLY</b>No compositor. Every emulator, and the launcher, takes the panel itself.</div>
     <div class="quickfact"><b>ONE EMULATOR</b>One tool for the job per system. Redundancies are dropped.</div>
   </div>
+
+  <hr class="thin">
+
+  <h2 id="look">What it looks like</h2>
+
+  <figure class="shot">
+    <img src="images/snes-super-mario-world.jpg" alt="Super Mario World on the Nova: scanlines from crt-guest-advanced at an exact 4x, with the 32-pixel bars" loading="lazy">
+    <figcaption><b>Super Mario World.</b> The panel runs the SNES mode, 120.198&nbsp;Hz, two refreshes for every one of the game's 60.0988 frames, so nothing is dropped or repeated. crt-guest-advanced draws the scanlines over an exact 4&times;; the bars above and below are the price of even lines. The audio link is at 32&nbsp;kHz, the console's own rate.</figcaption>
+  </figure>
+
+  <figure class="shot">
+    <img src="images/movies-dvd-4-3.jpg" alt="A DVD rip playing in mpv, filling the 4:3 panel" loading="lazy">
+    <figcaption><b>A DVD rip.</b> mpv decodes H.264 on the hardware decoder and draws straight to the display, no compositor. The rip had lost its aspect flag; it is shown at 4:3 again, filling the panel, with scanlines for standard definition.</figcaption>
+  </figure>
+
+  <figure class="shot">
+    <img src="images/launcher.jpg" alt="The launcher: a list of systems with game counts, and the volume, brightness, battery and time in the header" loading="lazy">
+    <figcaption><b>The launcher.</b> Text on black, drawn by the CPU into a KMS buffer. Systems with games, the counts, and the four numbers that matter in the header.</figcaption>
+  </figure>
 
   <hr class="thin">
 
