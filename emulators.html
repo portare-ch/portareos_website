@@ -167,159 +167,109 @@
 
   <header class="masthead">
     <h1 class="wordmark"><a href="./">PortareOS</a></h1>
-    <p class="tagline">Emulators and systems, as the build actually wires them.</p>
+    <p class="tagline">Emulators and systems, as the build wires them.</p>
   </header>
 
   <hr>
 
   <nav class="toc">
     <a href="./">Home</a> |
-    <a href="#standalone">The 35</a> |
-    <a href="#review">Under review</a> |
-    <a href="#sdl">SDL3</a> |
-    <a href="#retroarch">RetroArch only</a>
+    <a href="#counts">The counts</a> |
+    <a href="#systems">Every system</a> |
+    <a href="#gone">What went</a>
   </nav>
 
   <hr>
 
-  <h2>What this is</h2>
+  <h2 id="counts">What this is</h2>
 
-  <p>An inventory of everything the SM8550 build sets up, kept here because the answer is not obvious from reading the source. The emulator list lives in one 1,558-line recipe of nested conditionals, and which of them apply depends on the device being built.</p>
-
-  <p>So this was not read by eye. The recipe's own <code>add_emu_core</code> and <code>add_es_system</code> calls were executed with the device set to SM8550 and the helpers stubbed out, and what came back is what follows. It is what the build wires, not what the file appears to say.</p>
+  <p>The inventory of what the SM8550 build sets up: every folder the launcher lists, what goes in it, and the one emulator that runs it. It is generated from the build's own system list (<code>SUPPORTED_EMULATORS_AND_CORES.md</code>, written by the build from <code>virtual/emulators/package.mk</code>), not read off the recipe by eye.</p>
 
   <div class="tablewrap">
     <table>
       <caption>PortareOS on SM8550</caption>
-      <tr><th>Systems in EmulationStation</th><td class="num">136</td></tr>
-      <tr><th>Emulator packages built</th><td class="num">154</td></tr>
-      <tr><th>System and core pairings</th><td class="num">471</td></tr>
-      <tr><th>Distinct emulator front-ends</th><td class="num">35</td></tr>
-      <tr><th>Systems only RetroArch touches</th><td class="num">44</td></tr>
+      <tr><th>Console and computer systems</th><td class="num">44</td></tr>
+      <tr><th>libretro cores under RetroArch</th><td class="num">13</td></tr>
+      <tr><th>Standalone emulators and launchers</th><td class="num">8</td></tr>
+      <tr><th>Systems with more than one emulator</th><td class="num">3, all SNES: bsnes is still under evaluation beside Snes9x</td></tr>
     </table>
   </div>
 
-  <p><b>122 of the 154 packages are libretro cores</b>, which share one RetroArch and cost very little each. The other 32 are where the dependencies are, so those are the ones worth arguing about.</p>
+  <p>One emulator per system. Where ROCKNIX shipped several for a platform, one was picked and the rest dropped, together with the settings nobody had tuned for them. The cores are bsnes, Dolphin, FBNeo, Flycast, Gambatte, Genesis Plus GX, mGBA, NeoCD, ParaLLEl N64, PicoDrive, PPSSPP, Snes9x, SwanStation. The standalones are ARMSX2, gmu, Moonlight, mpv, PortMaster, ScummVM, Steam, xemu.</p>
 
   <hr class="thin">
 
-  <h2 id="standalone">The 32 that are not libretro cores</h2>
+  <h2 id="systems">Every system</h2>
 
-  <p>Sorted by how many systems each one covers. The last column is a reading rather than a decision, and nothing here has been removed on the strength of it.</p>
+  <p>The folder is what to create under the games directory. The file types are what the launcher lists there.</p>
 
   <div class="tablewrap">
     <table>
-      <caption>Standalone emulators and launchers</caption>
-      <tr><th>Package</th><th>Sys</th><th>Covers</th><th>SDL</th><th>Pulls in</th><th>Read</th></tr>
-
-      <tr><td class="pkg">ares-sa</td><td class="num">38</td><td>arcade, famicom, gb, gba, n64, neogeo, msx, snes and more</td><td>SDL3</td><td class="dep">gtk3</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">mednafen</td><td class="num">38</td><td>psx, saturn, pce, lynx, ngp, virtualboy, snes and more</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">skyemu-sa</td><td class="num">8</td><td>gb, gba, gbc, nds</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-look">overlap</td></tr>
-      <tr><td class="pkg">dolphin-sa</td><td class="num">4</td><td>gamecube, wii, wiiware, triforce</td><td>SDL3</td><td class="dep">qt6</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">vice-sa</td><td class="num">4</td><td>c64, c128, c16, vic20</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">AdvanceMame</td><td class="num">3</td><td>cps1, cps2, cps3</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-look">overlap</td></tr>
-      <tr><td class="pkg">flycast-sa</td><td class="num">3</td><td>dreamcast, naomi, atomiswave</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">melonds-sa</td><td class="num">2</td><td>nds, ndsiware</td><td>SDL2</td><td class="dep">qt6</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">mupen64plus-sa</td><td class="num">2</td><td>n64, n64dd</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-look">three n64</td></tr>
-      <tr><td class="pkg">ppsspp-sa</td><td class="num">2</td><td>psp, pspminis</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">armsx2-sa</td><td class="num">1</td><td>ps2</td><td>SDL3</td><td class="dep">qt6, llvm</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">azahar-sa</td><td class="num">1</td><td>3ds</td><td>SDL2</td><td class="dep">qt6, boost</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">duckstation-sa</td><td class="num">1</td><td>psx</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">gopher64-sa</td><td class="num">1</td><td>n64</td><td>SDL3</td><td class="dep">rust</td><td class="mark m-look">three n64</td></tr>
-      <tr><td class="pkg">nanoboyadvance-sa</td><td class="num">1</td><td>gba</td><td>SDL2</td><td class="dep">glew</td><td class="mark m-look">overlap</td></tr>
-      <tr><td class="pkg">yabasanshiro-sa</td><td class="num">1</td><td>saturn</td><td>SDL2</td><td class="dep">boost</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">supermodel-sa</td><td class="num">1</td><td>segamodel3</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">hypseus-singe</td><td class="num">1</td><td>daphne</td><td>SDL2</td><td class="dep">libmpeg2</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">amiberry</td><td class="num">1</td><td>amiga</td><td>SDL2</td><td class="dep">capsimg</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">hatarisa</td><td class="num">1</td><td>atarist</td><td>SDL2</td><td class="dep">portaudio</td><td class="mark m-look">niche</td></tr>
-      <tr><td class="pkg">scummvmsa</td><td class="num">1</td><td>scummvm</td><td>SDL2</td><td class="dep">fluidsynth</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">gzdoom-sa</td><td class="num">1</td><td>doom</td><td>SDL2</td><td class="dep">zmusic</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">openbor</td><td class="num">1</td><td>openbor</td><td>SDL2</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">pico-8</td><td class="num">1</td><td>pico-8</td><td>SDL2</td><td class="dep">licence needed</td><td class="mark m-look">niche</td></tr>
-      <tr><td class="pkg">portmaster</td><td class="num">1</td><td>ports</td><td>none</td><td class="dep">gstreamer</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">vita3k-sa</td><td class="num">1</td><td>psvita</td><td>SDL2</td><td class="dep">qt6, mesa</td><td class="mark m-look">ambitious</td></tr>
-      <tr><td class="pkg">gmu</td><td class="num">1</td><td>music</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">mplayer</td><td class="num">1</td><td>mplayer</td><td>none</td><td class="dep">nothing extra</td><td class="mark m-look">mpv exists</td></tr>
-      <tr><td class="pkg">rpcs3-sa</td><td class="num">1</td><td>ps3</td><td>SDL3</td><td class="dep">qt6, llvm</td><td class="mark m-go">under review</td></tr>
-      <tr><td class="pkg">xemu-sa</td><td class="num">1</td><td>xbox</td><td>SDL3</td><td class="dep">gtk3, python3</td><td class="mark m-go">under review</td></tr>
-      <tr><td class="pkg">moonlight</td><td class="num">1</td><td>moonlight</td><td>SDL2</td><td class="dep">opus, enet, avahi, ffmpeg</td><td class="mark m-keep">keep</td></tr>
-      <tr><td class="pkg">heroic</td><td class="num">1</td><td>heroic</td><td>none</td><td class="dep">needs wine</td><td class="mark m-go">under review</td></tr>
-      <tr><td class="pkg">wine</td><td class="num">1</td><td>windows</td><td>none</td><td class="dep">cups, libX*</td><td class="mark m-go">under review</td></tr>
-      <tr><td class="pkg">steam</td><td class="num">1</td><td>steam</td><td>none</td><td class="dep">fex-emu, gamescope, lsfg-vk, networkmanager</td><td class="mark m-keep">keep</td></tr>
+      <tr><th>Maker</th><th>System</th><th>Folder</th><th>File types</th><th>Emulator</th></tr>
+      <tr><td>Nintendo</td><td>Game Boy</td><td class="pkg">gb</td><td class="dep">.gb .gbc .zip .7z</td><td>Gambatte (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>Game Boy (Hacks)</td><td class="pkg">gbh</td><td class="dep">.gb .zip .7z</td><td>Gambatte (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>Game Boy Advance</td><td class="pkg">gba</td><td class="dep">.gba .zip .7z</td><td>mGBA (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>Game Boy Advance (Hacks)</td><td class="pkg">gbah</td><td class="dep">.gba .zip .7z</td><td>mGBA (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>Game Boy Advance video</td><td class="pkg">gbav</td><td class="dep">.gba .zip .7z</td><td>mGBA (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>Game Boy Color</td><td class="pkg">gbc</td><td class="dep">.gb .gbc .zip .7z</td><td>Gambatte (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>Game Boy Color (Hacks)</td><td class="pkg">gbch</td><td class="dep">.gb .gbc .zip .7z</td><td>Gambatte (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>GameCube</td><td class="pkg">gamecube</td><td class="dep">.gcm .iso .gcz .ciso .wbfs .rvz .dol .m3u</td><td>Dolphin (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>Nintendo 64</td><td class="pkg">n64</td><td class="dep">.z64 .n64 .v64 .zip .7z</td><td>ParaLLEl N64 (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>Nintendo 64 Disk Drive</td><td class="pkg">n64dd</td><td class="dep">.z64 .n64 .v64 .ndd .zip .7z</td><td>ParaLLEl N64 (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>Satellaview</td><td class="pkg">satellaview</td><td class="dep">.smc .fig .bs .sfc .bsx .swc .zip .7z</td><td>Snes9x (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>Super Famicom</td><td class="pkg">sfc</td><td class="dep">.smc .fig .sfc .swc .zip .7z</td><td>Snes9x (RetroArch); <span class="dep">alt: bsnes</span></td></tr>
+      <tr><td>Nintendo</td><td>Super NES MSU-1</td><td class="pkg">snesmsu1</td><td class="dep">.smc .fig .sfc .swc .zip .7z</td><td>Snes9x (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>Super Nintendo</td><td class="pkg">snes</td><td class="dep">.smc .fig .sfc .swc .zip .7z</td><td>Snes9x (RetroArch); <span class="dep">alt: bsnes</span></td></tr>
+      <tr><td>Nintendo</td><td>Super Nintendo (Hacks)</td><td class="pkg">snesh</td><td class="dep">.smc .fig .sfc .swc .zip .7z</td><td>Snes9x (RetroArch); <span class="dep">alt: bsnes</span></td></tr>
+      <tr><td>Nintendo</td><td>Triforce</td><td class="pkg">triforce</td><td class="dep">.gcm .iso .gcz .ciso .wbfs .rvz .dol .m3u</td><td>Dolphin (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>Wii</td><td class="pkg">wii</td><td class="dep">.gcm .iso .gcz .ciso .wbfs .rvz .dol .wad .m3u</td><td>Dolphin (RetroArch)</td></tr>
+      <tr><td>Nintendo</td><td>WiiWare</td><td class="pkg">wiiware</td><td class="dep">.gcm .iso .gcz .ciso .wbfs .rvz .dol .wad .m3u</td><td>Dolphin (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Dreamcast</td><td class="pkg">dreamcast</td><td class="dep">.cdi .gdi .chd .m3u .cue</td><td>Flycast (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Game Gear</td><td class="pkg">gamegear</td><td class="dep">.bin .gg .zip .7z</td><td>Genesis Plus GX (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Game Gear (Hacks)</td><td class="pkg">gamegearh</td><td class="dep">.bin .gg .zip .7z</td><td>Genesis Plus GX (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Genesis</td><td class="pkg">genesis</td><td class="dep">.bin .gen .md .sg .smd .zip .7z</td><td>Genesis Plus GX (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Genesis (Hacks)</td><td class="pkg">genh</td><td class="dep">.bin .gen .md .sg .smd .zip .7z</td><td>Genesis Plus GX (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Master System</td><td class="pkg">mastersystem</td><td class="dep">.bin .sms .zip .7z</td><td>Genesis Plus GX (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Mega CD</td><td class="pkg">megacd</td><td class="dep">.chd .cue .iso .m3u</td><td>Genesis Plus GX (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Mega Drive</td><td class="pkg">megadrive</td><td class="dep">.bin .gen .md .sg .smd .zip .7z</td><td>Genesis Plus GX (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Mega Drive</td><td class="pkg">megadrive-japan</td><td class="dep">.bin .gen .md .sg .smd .zip .7z</td><td>Genesis Plus GX (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Mega Drive (Hacks)</td><td class="pkg">megadriveh</td><td class="dep">.bin .gen .md .sg .smd .zip .7z</td><td>Genesis Plus GX (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Naomi</td><td class="pkg">naomi</td><td class="dep">.lst .bin .dat .zip .7z</td><td>Flycast (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>SG-1000</td><td class="pkg">sg-1000</td><td class="dep">.bin .sg .zip .7z</td><td>Genesis Plus GX (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Sega 32X</td><td class="pkg">sega32x</td><td class="dep">.32x .smd .bin .md .zip .7z</td><td>PicoDrive (RetroArch)</td></tr>
+      <tr><td>Sega</td><td>Sega CD</td><td class="pkg">segacd</td><td class="dep">.chd .cue .iso .m3u</td><td>Genesis Plus GX (RetroArch)</td></tr>
+      <tr><td>Sony</td><td>PSP Minis</td><td class="pkg">pspminis</td><td class="dep">.iso .cso .pbp .chd</td><td>PPSSPP (RetroArch)</td></tr>
+      <tr><td>Sony</td><td>PlayStation</td><td class="pkg">psx</td><td class="dep">.bin .cue .img .mdf .pbp .toc .cbn .m3u .ccd .chd .iso</td><td>SwanStation (RetroArch)</td></tr>
+      <tr><td>Sony</td><td>PlayStation 2</td><td class="pkg">ps2</td><td class="dep">.iso .mdf .nrg .bin .img .dump .gz .cso .chd</td><td>ARMSX2</td></tr>
+      <tr><td>Sony</td><td>PlayStation Portable</td><td class="pkg">psp</td><td class="dep">.iso .cso .pbp .chd</td><td>PPSSPP (RetroArch)</td></tr>
+      <tr><td>SNK</td><td>Neo Geo</td><td class="pkg">neogeo</td><td class="dep">.7z .zip .neo</td><td>FBNeo (RetroArch)</td></tr>
+      <tr><td>SNK</td><td>Neo Geo CD</td><td class="pkg">neocd</td><td class="dep">.cue .iso .chd</td><td>NeoCD (RetroArch)</td></tr>
+      <tr><td>Arcade</td><td>Arcade</td><td class="pkg">arcade</td><td class="dep">.zip .7z</td><td>FBNeo (RetroArch)</td></tr>
+      <tr><td>Bandai</td><td>SuFami Turbo</td><td class="pkg">sufami</td><td class="dep">.st .zip .7z</td><td>Snes9x (RetroArch)</td></tr>
+      <tr><td>Sammy</td><td>Atomiswave</td><td class="pkg">atomiswave</td><td class="dep">.lst .bin .dat .zip .7z</td><td>Flycast (RetroArch)</td></tr>
+      <tr><td>Microsoft</td><td>Xbox</td><td class="pkg">xbox</td><td class="dep">.iso</td><td>xemu</td></tr>
+      <tr><td>Valve</td><td>Steam</td><td class="pkg">applications</td><td class="dep">.desktop</td><td>Steam</td></tr>
+      <tr><td>Various</td><td>ScummVM</td><td class="pkg">games</td><td class="dep">.sh .svm .scummvm</td><td>ScummVM</td></tr>
+      <tr><td>System</td><td>Moonlight Game Streaming</td><td class="pkg">moonlight</td><td class="dep">.sh</td><td>Moonlight</td></tr>
+      <tr><td>System</td><td>Movies</td><td class="pkg">movies</td><td class="dep">.3g2 .3gp .asf .avi .divx .f4v .flv .m2ts .m3u .m4v .mkv .mov .mp4 .mpeg .mpg .mts .ogm .ogv .ts .vob .webm .wmv</td><td>mpv</td></tr>
+      <tr><td>System</td><td>Music Player</td><td class="pkg">playlists</td><td class="dep">.m3u .sh</td><td>gmu</td></tr>
+      <tr><td>System</td><td>Ports</td><td class="pkg">ports</td><td class="dep">.sh .appimage</td><td>PortMaster</td></tr>
     </table>
   </div>
 
   <hr class="thin">
 
-  <h2 id="review">What is under review</h2>
+  <h2 id="gone">What went</h2>
 
-  <h3>The x86 corner</h3>
-
-  <p>Four packages exist to run software this SoC cannot execute, and between them they carry the heaviest dependencies on the image. <code>steam</code> brings in <code>fex-emu</code>, <code>gamescope</code>, <code>lsfg-vk</code>, <code>nss</code> and <code>networkmanager</code>. <code>wine</code> and <code>heroic</code> launch Windows titles, and <code>box64</code> is a second translator underneath them.</p>
-
-  <p><b>Steam stays.</b> A large part of the PC library from before the mid-2000s is natively 4:3, and this is one of the few handhelds where those games display the way they were drawn rather than pillarboxed. That is the same argument the rest of this fork is built on, pointed at a different library.</p>
-
-  <p>Which leaves a narrower question than the one this section started with.</p>
-
-  <div class="note">
-    <p><b>Two x86 translators.</b> Keeping Steam keeps <code>fex-emu</code>, and <code>box64</code> does the same job by a different route. One image carrying both is worth understanding before either is defended: whether <code>wine</code> can sit on <code>fex-emu</code>, or whether the two translators cover cases the other cannot.</p>
-  </div>
-
-  <h3>Branches for hardware that is not here</h3>
-
-  <p>An earlier version of this page said <code>moonlight</code> pulls in the Rockchip media libraries <code>librga</code> and <code>rkmpp</code>. That was wrong, and wrong in an instructive way: those lines exist in the recipe but sit behind <code>if [[ "${DEVICE}" == RK* ]]</code>, so they were never applied here. Reading a recipe's dependency lines without evaluating its conditionals is exactly the mistake this page was built to avoid.</p>
-
-  <p>Two dead branches were found while checking. The Rockchip one above, and a <code>moonlight-qt</code> build gated on the architecture being the literal string <code>null</code>, which it never is, so <code>qt6</code> was never a dependency either. Both are gone, and the package is updated from a pin two years old to v2.7.1.</p>
-
-  <h3>Where several emulators cover one system</h3>
-
-  <p>Not waste in itself. A second emulator is often the one that runs the awkward title. But each is a package built, cached and shipped, so it is worth knowing where the stacking is.</p>
-
-  <div class="chips">
-    <span class="chip">n64: mupen64plus + gopher64 + ares + retroarch</span>
-    <span class="chip">nds: melonds + skyemu + retroarch</span>
-    <span class="chip">gb, gba, gbc: ares + mednafen + skyemu + nanoboyadvance + retroarch</span>
-    <span class="chip">saturn: yabasanshiro + mednafen + 2 cores</span>
-    <span class="chip">psx: duckstation + mednafen + 3 cores</span>
-  </div>
-
-  <h3>Widescreen assumptions</h3>
-
-  <p>No 16:9-only emulator has been found, and that is not the same as there being none. The three that shipped 1920&times;1080 render defaults, Supermodel, Flycast and melonDS, were corrected. Establishing that nothing else assumes a widescreen viewport means reading each emulator's shipped config for this handheld rather than its dependency list, which is a longer pass and has not been done.</p>
-
-  <h3>Removed</h3>
-
-  <p>Four have gone since this page was first written. <code>drastic</code> and <code>bigpemu</code> sat behind emulators that were already the default for their systems. <code>daedalusx64</code> was 32-bit only, so it appeared in the menu on a 64-bit build without ever being built. <code>touchhle</code> took the <code>ios</code> system with it, being the only thing that ran it, and <code>sndio</code> left at the same time as the only package that pulled it in.</p>
-
-  <hr class="thin">
-
-  <h2 id="sdl">SDL3</h2>
-
-  <p>Six packages already build against SDL3: <code>ares-sa</code>, <code>armsx2-sa</code>, <code>dolphin-sa</code>, <code>gopher64-sa</code>, <code>rpcs3-sa</code> and <code>xemu-sa</code>.</p>
-
-  <p>Moving the rest is not something the recipe can force. It depends on whether upstream supports SDL3 at all. The likeliest next candidates, because upstream has support in tree, are <code>ppsspp-sa</code>, <code>flycast-sa</code>, <code>duckstation-sa</code> and <code>scummvmsa</code>.</p>
-
-  <p>Three will never move: <code>drastic-sa</code> is a closed-source binary, <code>pico-8</code> is proprietary, and <code>bigpemu-sa</code> ships prebuilt.</p>
-
-  <hr class="thin">
-
-  <h2 id="retroarch">The 44 systems only RetroArch touches</h2>
-
-  <p>These have no standalone emulator at all. One libretro core each and nothing else, which makes them the cheapest things on the image and the last place to look for savings.</p>
-
-  <div class="chips">
-    <span class="chip">3do</span><span class="chip">amigacd32</span><span class="chip">amstradcpc</span><span class="chip">arduboy</span><span class="chip">atari2600</span><span class="chip">atari5200</span><span class="chip">atari7800</span><span class="chip">atari800</span><span class="chip">bbcmicro</span><span class="chip">bk</span><span class="chip">cdi</span><span class="chip">channelf</span><span class="chip">chip-8</span><span class="chip">easyrpg</span><span class="chip">fbn</span><span class="chip">gameandwatch</span><span class="chip">gp32</span><span class="chip">idtech</span><span class="chip">intellivision</span><span class="chip">macintosh</span><span class="chip">mame</span><span class="chip">megaduck</span><span class="chip">moto</span><span class="chip">msx2</span><span class="chip">neocd</span><span class="chip">odyssey2</span><span class="chip">palm</span><span class="chip">pc</span><span class="chip">pc-8800</span><span class="chip">pc-9800</span><span class="chip">pet</span><span class="chip">pokemini</span><span class="chip">scv</span><span class="chip">supervision</span><span class="chip">tic-80</span><span class="chip">uzebox</span><span class="chip">vectrex</span><span class="chip">videopac</span><span class="chip">vircon32</span><span class="chip">wasm4</span><span class="chip">x1</span><span class="chip">x68000</span><span class="chip">zmachine</span><span class="chip">zx81</span>
-  </div>
-
-  <hr class="thin">
+  <p>Everything that duplicated one of the emulators above, or ran a system this handheld is not for: the standalone builds of Dolphin, Flycast, PPSSPP and DuckStation beside their cores; ares and Mednafen; the second and third N64 emulators; RPCS3; Wine, Heroic and the Windows system; and the long tail of single-system emulators inherited from ROCKNIX. What remains is the table above, and each entry in it is the one that was configured for this panel.</p>
 
   <p><a href="./">Back to the front page</a></p>
 
 </div>
 
 <footer>
-  Counted from <code>virtual/emulators/package.mk</code> on <code>next</code> &middot;
-  <a href="https://github.com/portare-ch/distribution">source on GitHub</a>
+  Generated from <code>SUPPORTED_EMULATORS_AND_CORES.md</code> on <code>next</code>, 24 September 2026 &middot;
+  <a href="https://github.com/portare-ch/portareos">source on GitHub</a>
 </footer>
 
 </body>

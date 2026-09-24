@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PortareOS — Linux for the Retroid Pocket Nova</title>
-<meta name="description" content="PortareOS is a focused Linux Distro for the Retroid Pocket Nova: 4:3-first defaults, 120 Hz, low-latency tuning and handheld-specific fixes.">
+<meta name="description" content="PortareOS is an opinionated Linux distribution for the Retroid Pocket Nova: panel modes matched to each console, audio at the console's sample rate, KMS with no compositor, one emulator per system.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
 <style>
   :root {
@@ -313,13 +313,12 @@
 
   <header class="masthead">
     <h1 class="wordmark">PortareOS</h1>
-    <p class="tagline">Linux for the Retroid Pocket Nova.</p>
-    <p class="lead"><b>4:3 first. 120 Hz. Lower latency. Fewer generic defaults.</b><br>
-    A small ROCKNIX fork tuned for one handheld, and one handheld only.</p>
+    <p class="tagline">An opinionated Linux distribution for one device, the Retroid Pocket Nova.</p>
+    <p class="lead"><b>Black coffee without sugar and milk.<br>With the right amount of beans and water.</b></p>
 
     <div class="actions">
-      <a class="button" href="https://github.com/portare-ch/distribution/releases">[ Download builds ]</a>
-      <a class="button" href="https://github.com/portare-ch/distribution">[ Source ]</a>
+      <a class="button" href="https://github.com/portare-ch/portareos/releases">[ Download builds ]</a>
+      <a class="button" href="https://github.com/portare-ch/portareos">[ Source ]</a>
     </div>
   </header>
 
@@ -327,10 +326,10 @@
 
   <nav class="toc">
     <a href="#why">Why</a> |
-    <a href="#changes">Changes</a> |
-    <a href="#roadmap">Roadmap</a> |
+    <a href="#different">What is different</a> |
+    <a href="#rules">Rules</a> |
     <a href="#get">Install</a> |
-    <a href="#specs">Specs</a> |
+    <a href="#specs">Hardware</a> |
     <a href="emulators.html">Emulators</a> |
     <a href="#credits">Credits</a>
   </nav>
@@ -339,97 +338,148 @@
 
   <h2 id="why">Why PortareOS?</h2>
 
-  <p>The Retroid Pocket Nova has a screen worth building around: <b>1280&times;960, 4:3, 120&nbsp;Hz</b>. ROCKNIX already provides the foundation, but the Nova shares much of its configuration with the widescreen Retroid Pocket 6.</p>
+  <p>The Retroid Pocket Nova has a <b>1280&times;960 panel at 120&nbsp;Hz</b>. That is 4:3, the shape of everything made before widescreen, and PortareOS exists to make the best possible operating system for the best 4:3 handheld on earth.</p>
 
-  <p>PortareOS keeps the upstream work and changes the parts that should be Nova-specific: display geometry, emulator defaults, latency, suspend, input and a few rough edges that matter more on a handheld than on a generic Linux target.</p>
+  <p>Write the card, copy the games across, and every system is already set up for this panel, this gamepad and this chip. Tweaking is not expected, and not encouraged. Everything that does not serve that is an anti-feature and comes out.</p>
+
+  <p class="callout"><b>Most distributions drive the panel at 60 or 120&nbsp;Hz and the audio at 48&nbsp;kHz, and resample everything to fit.</b> PortareOS changes the hardware to fit the console instead: one panel mode per console family, and an audio link at the console's own sample rate.</p>
+
+  <div class="quickfacts">
+    <div class="quickfact"><b>MATCHED REFRESH</b>A panel mode at exactly twice each console's frame rate. A frame lands on a frame.</div>
+    <div class="quickfact"><b>MATCHED AUDIO</b>48, 44.1 or 32&nbsp;kHz, following the console. No resampling where the link can carry the rate.</div>
+    <div class="quickfact"><b>KMS ONLY</b>No compositor. Every emulator, and the launcher, takes the panel itself.</div>
+    <div class="quickfact"><b>ONE EMULATOR</b>One tool for the job per system. Redundancies are dropped.</div>
+  </div>
+
+  <hr class="thin">
+
+  <h2 id="different">What is different</h2>
+
+  <h3>Panel modes matched to the console</h3>
+  <p>The Nova has no variable refresh rate, so the panel driver carries one mode per console family, at exactly twice the console's frame rate. RetroArch asks for the matching mode when a game starts.</p>
 
   <div class="tablewrap">
     <table>
-      <caption>Same platform, very different panel</caption>
-      <tr><th>Retroid Pocket 6</th><td class="num">1920 &times; 1080 in use, 16:9</td></tr>
-      <tr><th>Retroid Pocket Nova</th><td class="num">1280 &times; 960, 4:3, 120 Hz</td></tr>
+      <caption>Panel modes</caption>
+      <tr><th>Mode</th><th>Console</th><th>Frame rate</th></tr>
+      <tr><td class="num">119.880 Hz</td><td>The 59.94&nbsp;Hz consoles: Dreamcast, PS2, PSP, GameCube, Xbox; and the default</td><td class="num">59.94</td></tr>
+      <tr><td class="num">119.635 Hz</td><td>PlayStation</td><td class="num">59.8173</td></tr>
+      <tr><td class="num">119.455 Hz</td><td>Game Boy, Game Boy Color, Game Boy Advance</td><td class="num">59.7275</td></tr>
+      <tr><td class="num">120.198 Hz</td><td>Super Nintendo</td><td class="num">60.0988</td></tr>
     </table>
   </div>
+  <p>The rates come from the consoles' own clocks, and the modes only vary the pixel clock, so the panel stays in its 120&nbsp;Hz class throughout. Switching mid-game was evaluated and dropped: SwanStation does not change rate the way a real PlayStation does, so there is nothing to follow.</p>
 
-  <p class="callout"><b>960p is unusually good for retro games.</b> 240p scales cleanly to 4&times; and 480p to 2&times;. For many classic systems, integer scaling can be both pixel-perfect and screen-filling.</p>
+  <h3>Audio at the console's sample rate</h3>
+  <p>The Nova's audio link runs at 48, 44.1 or 32&nbsp;kHz, following the stream. That took four kernel patches to unpin the DSP ports and derive the I2S bit clock from the stream, and each emulator asks for its console's rate.</p>
 
-  <div class="quickfacts">
-    <div class="quickfact"><b>4:3 NATIVE</b>Settings are chosen for the Nova's panel, not inherited from a 16:9 cousin.</div>
-    <div class="quickfact"><b>120 HZ ONLY</b>No synthetic 60 Hz mode for the display stack to pick by mistake.</div>
-    <div class="quickfact"><b>LOWER LATENCY</b>Less frame buffering and a shorter audio path.</div>
-    <div class="quickfact"><b>HANDHELD FIRST</b>Suspend, fullscreen dialogs and controls are treated as core features.</div>
+  <div class="tablewrap">
+    <table>
+      <caption>Link rate by console</caption>
+      <tr><td class="num">44.1 kHz</td><td>PlayStation, Dreamcast, PSP, Neo Geo CD, every Sega system</td></tr>
+      <tr><td class="num">32 kHz</td><td>Super Nintendo</td></tr>
+      <tr><td class="num">48 kHz</td><td>PS2, Xbox, GameCube and Wii, and everything else</td></tr>
+    </table>
   </div>
+  <p>The full table, with every emulator's output rate, is in <a href="https://github.com/portare-ch/portareos/blob/next/documentation/PER_DEVICE_DOCUMENTATION/SM8550/REFRESH_RATES.md">REFRESH_RATES.md</a>.</p>
+
+  <h3>KMS, no compositor</h3>
+  <p>Nothing draws through a compositor. Each program takes the panel itself:</p>
+  <ul>
+    <li><b>The launcher</b> owns the panel through KMS with a dumb buffer. No GPU, no images, text on black.</li>
+    <li><b>RetroArch</b> renders with Vulkan straight to the display (<code>VK_KHR_display</code>).</li>
+    <li><b>ARMSX2</b> does the same, through a patch of ours: the renderer had a direct-to-display path that no frontend ever reached, and the patch adds the branch that does. Qt runs offscreen and the GS takes the panel.</li>
+    <li><b>mpv</b> plays films through Vulkan direct to the display too, so a movie never passes through a compositor either.</li>
+    <li><b>xemu, ScummVM, PortMaster and Moonlight</b> run on SDL's KMS driver: there is no compositor in the image to give them a window.</li>
+    <li><b>Steam</b> is the one exception. It brings gamescope, its own compositor, on the DRM backend, because the Steam runtime cannot be recompiled.</li>
+  </ul>
+  <p>sway and EmulationStation are gone from the image.</p>
+
+  <h3>One emulator per system</h3>
+  <p>One tool for the job, and the best one wins. Where ROCKNIX shipped several emulators for a platform, one was picked and the rest dropped, together with the settings nobody had tuned for them.</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Systems and their emulator</caption>
+      <tr><th>System</th><th>Emulator</th></tr>
+      <tr><td>Arcade, Neo Geo</td><td>FBNeo</td></tr>
+      <tr><td>Neo Geo CD</td><td>NeoCD</td></tr>
+      <tr><td>Game Boy, Game Boy Color</td><td>Gambatte</td></tr>
+      <tr><td>Game Boy Advance</td><td>mGBA</td></tr>
+      <tr><td>Super Nintendo</td><td>Snes9x (bsnes still under evaluation)</td></tr>
+      <tr><td>Nintendo 64</td><td>ParaLLEl N64 with ParaLLEl-RDP on Vulkan</td></tr>
+      <tr><td>GameCube, Wii</td><td>Dolphin</td></tr>
+      <tr><td>Master System, Game Gear, Mega Drive, Sega CD</td><td>Genesis Plus GX</td></tr>
+      <tr><td>32X</td><td>PicoDrive</td></tr>
+      <tr><td>Dreamcast, NAOMI, Atomiswave</td><td>Flycast</td></tr>
+      <tr><td>PlayStation</td><td>SwanStation</td></tr>
+      <tr><td>PlayStation 2</td><td>ARMSX2</td></tr>
+      <tr><td>PSP</td><td>PPSSPP</td></tr>
+      <tr><td>Xbox</td><td>xemu</td></tr>
+      <tr><td>Point-and-click</td><td>ScummVM</td></tr>
+      <tr><td>Ports, streaming, PC</td><td>PortMaster, Moonlight, Steam</td></tr>
+      <tr><td>Movies, music</td><td>mpv, gmu</td></tr>
+    </table>
+  </div>
+  <p>Every emulator quits with the same buttons, <b>Home + Start</b>. The <a href="emulators.html">emulators page</a> has every system with its folder and file types.</p>
+
+  <h3>Configured for this panel</h3>
+  <ul>
+    <li>4:3 with integer scaling where the console's lines divide into 960: Game Boy at 960&times;864, N64 at 2&times; on ParaLLEl-RDP, PlayStation at 4&times; with a CRT shader, the handheld LCD shaders for the Game Boy family.</li>
+    <li>Correct palettes and boot logos: a Game Boy Color game gets the GBC hardware and its colour correction.</li>
+    <li>No automatic savestate loading.</li>
+  </ul>
+
+  <h3>Movies at the right shape</h3>
+  <p>mpv is the video player. H.264 and HEVC decode on the Nova's hardware decoder, a few percent of one core for a 1080p stream. Standard-definition 4:3 rips that lost their aspect flag are shown at 4:3 again, and SD gets scanlines, because a DVD was made for a CRT. Position is saved on quit.</p>
+
+  <h3>Lightweight</h3>
+  <ul>
+    <li>The image is about 610&nbsp;MB compressed.</li>
+    <li>PipeWire and nothing else. PulseAudio is banned, and a check in CI fails the build if it comes back. The graph's minimum quantum is 256 frames, 5.3&nbsp;ms.</li>
+    <li>No EmulationStation, no sway, no artwork scraping, no media centre.</li>
+    <li>Wrappers and duplicate tools are removed as they are found.</li>
+  </ul>
+
+  <h3>Latency</h3>
+  <p>1000&nbsp;Hz tick, preemption model selectable at boot, the teo idle governor, schedutil with the chip's energy model, and the emulator frame queue kept as short as it goes: two swapchain images and automatic frame delay in RetroArch. Black frame insertion, which a 120&nbsp;Hz panel showing 60&nbsp;Hz content can afford, is work in progress.</p>
+
+  <h3>Kept current</h3>
+  <p>Kernel 7.2.5, Mesa 26.2.2, PipeWire 1.6.8 and RetroArch from a recent commit. A daily pull request moves the emulators to their upstream heads.</p>
+
+  <h3>The launcher</h3>
+  <p><a href="https://github.com/portare-ch/portarelauncher">portarelauncher</a> is the front-end: consoles, games, and a settings menu with Wi-Fi, Bluetooth, SSH, USB gadget mode, time zone, and updates. Updates come straight from GitHub over Wi-Fi, from the nightly or the release channel, and install on restart. Every device makes its own root password on first boot and shows it under About.</p>
+
+  <h3>Tuned for the device</h3>
+  <ul>
+    <li>Suspend, with a stack of kernel patches so UFS, PCIe, Wi-Fi, the gamepad MCU and the LEDs survive it.</li>
+    <li>microSD at UHS-I SDR104.</li>
+    <li>The lowest GPU operating point, 124.8&nbsp;MHz, so a menu or a film keeps the fan off.</li>
+  </ul>
 
   <hr class="thin">
 
-  <h2 id="changes">What is different</h2>
+  <h2 id="rules">The rules</h2>
 
-  <dl class="changes">
-    <dt>4:3-native display defaults</dt>
-    <dd>Render resolutions are corrected to 1280&times;960 where needed, and integer scaling is enabled by default for systems whose native height divides cleanly into 960.</dd>
+  <ul>
+    <li><b>One device.</b> Every other device tree has been deleted, not switched off.</li>
+    <li><b>One emulator per system.</b> Redundancies are dropped.</li>
+    <li><b>KMS is the only way to launch a game.</b> No compositing, except for Steam.</li>
+    <li><b>The console's rates, not the display's.</b> Refresh and sample rates are matched wherever the hardware can carry them.</li>
+    <li><b>Latency before everything except correctness.</b></li>
+    <li><b>Anti-features come out.</b> If it is not needed for a smooth game, it is not in the image.</li>
+  </ul>
 
-    <dt>120 Hz that stays 120 Hz</dt>
-    <dd>The synthetic 60 Hz panel mode is removed, avoiding a mismatch between the panel timing and the display controller.</dd>
-
-    <dt>Lower input latency</dt>
-    <dd>The emulator frame queue is reduced from two buffered frames to zero. More work is underway to see whether the compositor can be removed from the path entirely.</dd>
-
-    <dt>Lower audio latency</dt>
-    <dd>The audio floor is reduced from <b>20&nbsp;ms to 5.3&nbsp;ms</b>. SDL, RetroArch, mpv and the frontend now use PipeWire directly instead of taking compatibility-layer detours.</dd>
-
-    <dt>Deep suspend</dt>
-    <dd>Suspend is enabled for the Nova. Put the handheld to sleep in a game and resume a few seconds later instead of treating every break like a shutdown.</dd>
-
-    <dt>Handheld-sized windows</dt>
-    <dd>Standalone emulator dialogs open fullscreen so settings remain reachable on a 4:3 screen. <b>Guide+B</b> closes them.</dd>
-
-    <dt>microSD tuning</dt>
-    <dd>The downstream controller work removes the vendor High Speed cap caused by the SDR104 tuning issue. The target is roughly 85&nbsp;MB/s instead of about 13&nbsp;MB/s; this is still being validated on-device.</dd>
-
-    <dt>Less baggage</dt>
-    <dd>Redundant or poor-fit components are removed where they add maintenance without improving the Nova experience. Dolphin is also kept substantially newer than the inherited build.</dd>
-  </dl>
-
-  <hr class="thin">
-
-  <h2 id="roadmap">Roadmap</h2>
-
-  <p>Direction, not promises. The goal is simple: make the Nova feel configured before you touch a settings menu.</p>
-
-  <dl class="roadmap">
-    <dt><span class="status planned">Planned</span>Every emulator configured on arrival</dt>
-    <dd>Flash the card, copy over games and start playing. Per-system defaults will favour low latency first, then performance and visuals where they do not cost responsiveness.</dd>
-
-    <dt><span class="status now">In progress</span>More 4:3 cleanup</dt>
-    <dd>Render geometry is fixed, but some bezels, overlays and shader presets still carry widescreen assumptions.</dd>
-
-    <dt><span class="status question">Open question</span>Direct display access</dt>
-    <dd>Test whether standalone emulators can bypass Wayland and use KMS/DRM directly. Best case: one less frame between input and display.</dd>
-
-    <dt><span class="status planned">Planned</span>Handheld-native windowing</dt>
-    <dd>Replace the desktop-oriented compositor behaviour with something designed around one fullscreen app, a d-pad and four face buttons.</dd>
-
-    <dt><span class="status planned">Planned</span>Button glyph profiles</dt>
-    <dd>Choose the physical button set fitted to the Nova and have menus and supported emulators show matching PlayStation, GameCube, Xbox or Nintendo-style glyphs.</dd>
-
-    <dt><span class="status planned">Planned</span>Easy BFI mode</dt>
-    <dd>The Nova has a 120&nbsp;Hz OLED, while most retro content runs at 60&nbsp;Hz or below. A simple black-frame-insertion mode can use that extra refresh headroom to reduce perceived motion blur without asking games or emulators to run faster.</dd>
-
-    <dt><span class="status planned">Planned</span>OLED calibration</dt>
-    <dd>Users have reported poor colour calibration on the Nova's OLED panel, with some indications that the factory profile may be tuned more like an HDR display than a normal SDR handheld. PortareOS will add a measured, corrected colour profile once the panel has been characterised properly.</dd>
-
-    <dt><span class="status planned">Planned</span>Performance tuning</dt>
-    <dd>GPU operating points, CPU affinity and governor tuning for the harder systems, without trading away the latency gains above.</dd>
-  </dl>
+  <p>Ongoing: black frame insertion, the SNES core choice, further footprint reduction, and removing the remaining wrappers. <a href="https://github.com/portare-ch/portareos/blob/next/ROADMAP.md">ROADMAP.md</a> is where this is going and <a href="https://github.com/portare-ch/portareos/blob/next/BUGS.md">BUGS.md</a> is what is known to be broken or unfinished.</p>
 
   <hr class="thin">
 
   <h2 id="get">Getting it</h2>
 
-  <p class="callout"><b>Pre-release software.</b> PortareOS is developed by one person on one Nova. Expect rough edges, read the release notes, and keep a known-good card around.</p>
+  <p class="callout"><b>Beta.</b> PortareOS is developed on one Nova. Read the release notes, and keep a known-good card around.</p>
 
   <h3>1. Download a build</h3>
-  <p>Builds live on the <a href="https://github.com/portare-ch/distribution/releases">GitHub releases page</a>. Use the <code>.img.gz</code> file for a fresh card. The <code>.tar</code> file is for updating an existing PortareOS installation.</p>
+  <p>Builds live on the <a href="https://github.com/portare-ch/portareos/releases">GitHub releases page</a>: a monthly release, and a nightly marked pre-release. Use the <code>.img.gz</code> file for a fresh card. The <code>.tar</code> file is for updating an existing PortareOS installation by hand.</p>
 
   <details>
     <summary>Verify the download</summary>
@@ -461,15 +511,18 @@ sudo dd if=PortareOS-SM8550.aarch64-&lt;date&gt;.img of=/dev/rdisk4 bs=4m</code>
     <p><b>This is the risky step:</b> flashing the wrong bootloader can leave the handheld unable to boot.</p>
   </details>
 
-  <h3 id="updating">Updating later</h3>
-  <p>Put the PortareOS <code>.tar</code> file in a folder named <b><code>UPD</code></b> on internal storage or a second card. The frontend detects it, stages the update and applies it after reboot.</p>
+  <h3>4. First boot</h3>
+  <p>Settings &gt; Wi-Fi joins a network. Settings &gt; About shows the root password this device made for itself; SSH is on, and <code>ssh root@&lt;address&gt;</code> logs in with it.</p>
 
+  <h3 id="updating">Updating later</h3>
+  <p><b>From the launcher:</b> Settings &gt; About &gt; Update asks GitHub what the chosen channel, nightly or release, has for this device, downloads it over Wi-Fi, and installs it on restart.</p>
+  <p><b>From a file:</b> put the PortareOS <code>.tar</code> in a folder named <b><code>UPD</code></b> on internal storage or a second card; it is staged and applied after reboot.</p>
   <p><b>Fresh installs must start from a PortareOS image.</b> Do not install a PortareOS update tar over an existing ROCKNIX card; the boot partition labels differ.</p>
 
   <details>
     <summary>Build it yourself</summary>
-    <pre><code>git clone https://github.com/portare-ch/distribution
-cd distribution
+    <pre><code>git clone https://github.com/portare-ch/portareos
+cd portareos
 make docker-SM8550</code></pre>
     <p>Images land in <code>target/</code>. A first build needs a container runtime, roughly 100&nbsp;GB of disk and several hours.</p>
   </details>
@@ -483,10 +536,11 @@ make docker-SM8550</code></pre>
       <caption>Retroid Pocket Nova</caption>
       <tr><th>SoC</th><td>Qualcomm QCS8550 (Snapdragon 8 Gen 2)</td></tr>
       <tr><th>CPU</th><td class="num">1 &times; Cortex-X3, 4 &times; A710/A715, 3 &times; A510</td></tr>
-      <tr><th>GPU</th><td>Adreno 740, Freedreno / Mesa</td></tr>
-      <tr><th>Display</th><td class="num">1280 &times; 960, 4:3, 120 Hz</td></tr>
+      <tr><th>GPU</th><td>Adreno 740, Freedreno / Mesa 26.2.2</td></tr>
+      <tr><th>Display</th><td class="num">1280 &times; 960, 4:3, OLED, 119.88 Hz and the matched modes above</td></tr>
+      <tr><th>Audio link</th><td class="num">48 / 44.1 / 32 kHz</td></tr>
       <tr><th>Gamepad</th><td>rsinput MCU over UART</td></tr>
-      <tr><th>Kernel</th><td class="num">Linux 7.2.2</td></tr>
+      <tr><th>Kernel</th><td class="num">Linux 7.2.5</td></tr>
     </table>
   </div>
 
@@ -494,11 +548,9 @@ make docker-SM8550</code></pre>
 
   <h2 id="credits">Credits</h2>
 
-  <p>PortareOS stands on <a href="https://github.com/ROCKNIX/distribution">ROCKNIX</a>, <a href="https://github.com/JustEnoughLinuxOS/distribution">JELOS</a>, LibreELEC, CoreELEC and the emulator, Mesa and Linux projects underneath them. Nearly all of the foundation is their work.</p>
+  <p>PortareOS began as a fork of <a href="https://github.com/ROCKNIX/distribution">ROCKNIX</a>, itself a fork of <a href="https://github.com/JustEnoughLinuxOS/distribution">JELOS</a>, and much of the engineering underneath is theirs. It no longer tracks ROCKNIX. Please keep PortareOS bug reports with PortareOS rather than the ROCKNIX maintainers; for the upstream project, visit <a href="https://rocknix.org">rocknix.org</a>.</p>
 
-  <p>Several SM8550 kernel patches come from <a href="https://github.com/shuuri-labs/pocknix-os">pocknix-os</a> by shuuri-labs, including microSD, gamepad MCU and panel refresh-rate work. Authorship remains in the patch headers.</p>
-
-  <p>For the upstream project and its documentation, visit <a href="https://rocknix.org">rocknix.org</a>. Please keep PortareOS-specific bug reports with PortareOS rather than the ROCKNIX maintainers.</p>
+  <p>Several SM8550 kernel patches come from <a href="https://github.com/shuuri-labs/pocknix-os">pocknix-os</a> by shuuri-labs. Authorship is kept in the patch headers.</p>
 
 </div>
 
@@ -509,7 +561,7 @@ make docker-SM8550</code></pre>
     <span class="badge"><b>4:3</b>forever</span>
   </div>
   <div>Visitors: <span class="counter"><!--HITS-->0001247<!--/HITS--></span></div>
-  <div>Last updated 8 September 2026 &middot; <a href="https://github.com/portare-ch/distribution">source on GitHub</a></div>
+  <div>Last updated 24 September 2026 &middot; <a href="https://github.com/portare-ch/portareos">source on GitHub</a></div>
   <div style="color:#5a5f66;">PortareOS is not affiliated with or endorsed by ROCKNIX or Retroid.</div>
 </footer>
 

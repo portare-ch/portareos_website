@@ -1,6 +1,6 @@
 # os.portare.org
 
-The website for [PortareOS](https://github.com/portare-ch/distribution) — a personal fork of
+The website for [PortareOS](https://github.com/portare-ch/portareos) — an opinionated fork of
 ROCKNIX for the Retroid Pocket Nova.
 
 One hand-written `index.html`. No build step, no framework, **no JavaScript**. The only
