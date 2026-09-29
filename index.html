@@ -409,6 +409,10 @@
   <h3>Audio at the console's sample rate</h3>
   <p>The Nova's audio link runs at 48, 44.1 or 32&nbsp;kHz, following the stream. That took four kernel patches to unpin the DSP ports and derive the I2S bit clock from the stream, and each emulator asks for its console's rate.</p>
 
+  <p>Two more changes took the latency down with it. The DSP took audio in a fixed 480 frames at a time, which is 10&nbsp;ms only at 48&nbsp;kHz and 15 at the SNES's 32; it now takes 10&nbsp;ms of frames at whatever rate the stream runs. And the playback graph moved to the AudioReach endpoint that publishes a sample-accurate position, so the kernel stops calling the device batch and PipeWire stops keeping an extra period queued against a pointer that used to jump. A tester with a 240&nbsp;fps camera had found RetroArch's audio latency setting would not go below 32&nbsp;ms here without crackling; it now runs at <b>8&nbsp;ms</b>, which is as low as RetroArch itself allows.</p>
+
+  <p>That pull-mode endpoint is the path Android uses on this chip and mainline Linux does not. Filmed at 240&nbsp;fps against Android on the same device, button-to-sound now varies by <b>one frame here where Android varies by two</b>. The average is still a little behind, and bringing it down is ongoing.</p>
+
   <div class="tablewrap">
     <table>
       <caption>Link rate by console</caption>
@@ -471,14 +475,14 @@
 
   <h3>Lightweight</h3>
   <ul>
-    <li>The image is about 610&nbsp;MB compressed.</li>
+    <li>The image is about 470&nbsp;MB compressed.</li>
     <li>PipeWire and nothing else. PulseAudio is banned, and a check in CI fails the build if it comes back. The graph's minimum quantum is 256 frames, 5.3&nbsp;ms.</li>
     <li>No EmulationStation, no sway, no artwork scraping, no media centre.</li>
     <li>Wrappers and duplicate tools are removed as they are found.</li>
   </ul>
 
   <h3>Latency</h3>
-  <p>1000&nbsp;Hz tick, preemption model selectable at boot, the teo idle governor, schedutil with the chip's energy model, and the emulator frame queue kept as short as it goes: two swapchain images and automatic frame delay in RetroArch. Black frame insertion, which a 120&nbsp;Hz panel showing 60&nbsp;Hz content can afford, is work in progress.</p>
+  <p>1000&nbsp;Hz tick, preemption model selectable at boot, the teo idle governor, schedutil with the chip's energy model, and the emulator frame queue kept as short as it goes: two swapchain images and automatic frame delay in RetroArch. The panel holds the mode it is given to better than a part per million, measured against the SoC's own clock rather than assumed, so the console rates above are what the display actually runs. Black frame insertion, which a 120&nbsp;Hz panel showing 60&nbsp;Hz content can afford, is work in progress.</p>
 
   <h3>Kept current</h3>
   <p>Kernel 7.2.5, Mesa 26.2.2, PipeWire 1.6.8 and RetroArch from a recent commit. A daily pull request moves the emulators to their upstream heads.</p>
