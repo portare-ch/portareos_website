@@ -1,609 +1,113 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PortareOS — Linux for the Retroid Pocket Nova</title>
-<meta name="description" content="PortareOS is an opinionated Linux distribution for the Retroid Pocket Nova: panel modes matched to each console, audio at the console's sample rate, KMS with no compositor, one emulator per system.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
-<style>
-  :root {
-    --ground:  #b3b7bd;
-    --page:    #f4f4ef;
-    --ink:     #14161a;
-    --dim:     #4a5058;
-    --rule:    #7f858e;
-    --link:    #0000cc;
-    --visited: #551a8b;
-    --accent:  #a02020;
-    --bevel-hi: #ffffff;
-    --bevel-lo: #5a5f66;
-    --note:    #fdf6d8;
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PortareOS</title>
+  <meta name="description" content="PortareOS on GitHub.">
+  <style>
+    :root {
+      color-scheme: dark;
+      background: #030703;
+      color: #45ff69;
+      font-family: "Courier New", Courier, monospace;
+      font-size: clamp(16px, 2.5vw, 22px);
+      font-weight: 700;
+      line-height: 1.35;
+      text-shadow: 0 0 5px #45ff6959;
+    }
 
-    --body: Verdana, Geneva, "DejaVu Sans", sans-serif;
-    --mono: "Courier New", Courier, monospace;
-    --display: "VT323", "Courier New", monospace;
-  }
+    * { box-sizing: border-box; }
 
-  * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
 
-  body {
-    background-color: var(--ground);
-    color: var(--ink);
-    font-family: var(--body);
-    font-size: 13px;
-    line-height: 1.65;
-    margin: 0;
-    padding: 24px 12px 48px;
-  }
+    main {
+      width: 100%;
+      max-width: 720px;
+    }
 
-  .window {
-    max-width: 640px;
-    margin: 0 auto;
-    background: var(--page);
-    border: 2px solid;
-    border-color: var(--bevel-hi) var(--bevel-lo) var(--bevel-lo) var(--bevel-hi);
-    padding: 18px 22px 26px;
-  }
+    h1 {
+      margin: 0;
+      padding: 0 8px 8px;
+      border-bottom: 2px solid currentColor;
+      font-size: 1em;
+    }
 
-  .masthead { text-align: center; padding: 6px 0 2px; }
+    nav {
+      min-height: 260px;
+      padding: 24px 8px;
+    }
 
-  .wordmark {
-    font-family: var(--display);
-    font-size: 68px;
-    line-height: 0.9;
-    letter-spacing: 0.02em;
-    color: var(--accent);
-    margin: 0;
-    text-wrap: balance;
-  }
+    h2 {
+      margin: 0 0 4px;
+      font-size: 1em;
+    }
 
-  .tagline {
-    font-size: 12px;
-    color: var(--dim);
-    margin: 6px 0 0;
-  }
+    a {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5ch;
+      width: fit-content;
+      max-width: 100%;
+      min-height: 44px;
+      padding: 6px 0;
+      color: #d6ffe3;
+      text-decoration: none;
+      text-shadow: 0 0 6px #6aff98a6;
+    }
 
-  hr {
-    border: 0;
-    border-top: 1px solid var(--rule);
-    margin: 18px 0;
-  }
-  hr.thin { border-top: 1px dotted var(--rule); }
+    .cursor { flex: none; }
 
-  nav.toc { text-align: center; font-size: 12px; }
-  nav.toc a { margin: 0 2px; }
+    a:hover { color: #fff; }
+    a:active { color: #45ff69; }
+    a:focus-visible {
+      outline: 2px solid #45ff69;
+      outline-offset: 4px;
+    }
 
-  h2 {
-    font-family: var(--display);
-    font-size: 28px;
-    line-height: 1;
-    color: var(--accent);
-    margin: 0 0 8px;
-    text-wrap: balance;
-  }
+    footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 24px;
+      border-top: 2px solid currentColor;
+      padding: 8px;
+      font-size: 0.8em;
+    }
 
-  h3 {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin: 16px 0 4px;
-    color: var(--dim);
-  }
+    kbd { font: inherit; }
 
-  p { margin: 0 0 10px; max-width: 62ch; }
-  ul { margin: 0 0 10px; padding-left: 22px; }
-  li { margin-bottom: 5px; }
+    @media (max-width: 480px) {
+      body { padding: 20px 16px; }
+      nav { min-height: 220px; }
+    }
 
-  a { color: var(--link); }
-  a:visited { color: var(--visited); }
-  a:focus-visible { outline: 2px dotted var(--accent); outline-offset: 2px; }
-
-  code, kbd {
-    font-family: var(--mono);
-    font-size: 12px;
-    background: #e6e6df;
-    padding: 0 3px;
-  }
-
-  pre {
-    font-family: var(--mono);
-    font-size: 12px;
-    background: #e6e6df;
-    border: 1px solid var(--rule);
-    padding: 8px 10px;
-    margin: 0 0 10px;
-    overflow-x: auto;
-  }
-  pre code { background: none; padding: 0; }
-
-  .tablewrap { overflow-x: auto; margin: 0 0 10px; }
-  table {
-    border-collapse: collapse;
-    font-size: 12px;
-    width: 100%;
-  }
-  caption {
-    caption-side: top;
-    text-align: left;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--dim);
-    padding-bottom: 4px;
-  }
-  th, td {
-    border: 1px solid var(--rule);
-    padding: 4px 8px;
-    text-align: left;
-    vertical-align: top;
-  }
-  th {
-    background: #e0e0d8;
-    font-weight: bold;
-    white-space: nowrap;
-  }
-  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
-
-  dl.changes { margin: 0; }
-  dl.changes dt { font-weight: bold; margin-top: 10px; }
-  dl.changes dd { margin: 2px 0 0; max-width: 62ch; }
-
-  dl.roadmap { margin: 0; }
-  dl.roadmap dt { font-weight: bold; margin-top: 12px; }
-  dl.roadmap dd { margin: 2px 0 0; max-width: 62ch; }
-
-  .status {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    border: 1px solid var(--bevel-lo);
-    border-top-color: var(--bevel-hi);
-    border-left-color: var(--bevel-hi);
-    background: #d8d8d0;
-    color: #23262b;
-    padding: 1px 5px;
-    margin-right: 7px;
-    white-space: nowrap;
-    vertical-align: 1px;
-  }
-  .status.now      { background: #cfe0cf; }
-  .status.planned  { background: #d8d8d0; }
-  .status.question { background: var(--note); }
-
-  footer {
-    max-width: 640px;
-    margin: 14px auto 0;
-    font-size: 11px;
-    color: #3d434a;
-    text-align: center;
-    line-height: 1.8;
-  }
-  footer a { color: #14238a; }
-
-  .badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    justify-content: center;
-    margin: 10px 0 8px;
-  }
-  .badge {
-    font-family: var(--mono);
-    font-size: 10px;
-    line-height: 1.1;
-    width: 88px;
-    height: 31px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border: 1px solid var(--bevel-lo);
-    border-top-color: var(--bevel-hi);
-    border-left-color: var(--bevel-hi);
-    background: #d8d8d0;
-    color: #23262b;
-    text-decoration: none;
-  }
-  .badge b { font-size: 11px; }
-
-  .counter {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 13px;
-    letter-spacing: 3px;
-    background: #101014;
-    color: #40e060;
-    border: 1px solid var(--bevel-lo);
-    padding: 2px 6px;
-    font-variant-numeric: tabular-nums;
-  }
-
-
-  .lead {
-    max-width: 52ch;
-    margin: 9px auto 0;
-    font-size: 14px;
-    line-height: 1.5;
-    text-align: center;
-  }
-
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    margin: 14px 0 2px;
-  }
-
-  .button {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #111 !important;
-    background: #d8d8d0;
-    border: 2px solid;
-    border-color: var(--bevel-hi) var(--bevel-lo) var(--bevel-lo) var(--bevel-hi);
-    padding: 4px 9px;
-  }
-
-  .button:active {
-    border-color: var(--bevel-lo) var(--bevel-hi) var(--bevel-hi) var(--bevel-lo);
-  }
-
-  .callout {
-    max-width: none;
-    background: var(--note);
-    border: 1px solid #aaa27d;
-    padding: 8px 10px;
-    margin: 12px 0;
-  }
-
-  .quickfacts {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-    margin: 12px 0 2px;
-  }
-
-  .quickfact {
-    border: 1px dotted var(--rule);
-    padding: 7px 8px;
-    font-size: 11px;
-    line-height: 1.45;
-  }
-
-  .quickfact b {
-    display: block;
-    font-family: var(--mono);
-    font-size: 12px;
-  }
-
-  details {
-    margin: 8px 0 12px;
-    border: 1px dotted var(--rule);
-    padding: 6px 8px;
-    background: #eeeeea;
-  }
-
-  summary {
-    cursor: pointer;
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: bold;
-  }
-
-  details > :last-child { margin-bottom: 2px; }
-
-  figure.shot { margin: 12px 0 14px; }
-  figure.shot img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border: 1px solid var(--rule);
-    background: #000;
-  }
-  figure.shot figcaption {
-    font-size: 11px;
-    line-height: 1.5;
-    color: var(--dim);
-    margin-top: 5px;
-    max-width: 62ch;
-  }
-
-  @media (max-width: 520px) {
-    .wordmark { font-size: 48px; }
-    .window { padding: 14px 14px 20px; }
-    .quickfacts { grid-template-columns: 1fr; }
-  }
-</style>
+    @media (forced-colors: active) {
+      a { color: LinkText; }
+      a:focus-visible { outline-color: Highlight; }
+    }
+  </style>
 </head>
-
 <body>
-
-<div class="window">
-
-  <header class="masthead">
-    <h1 class="wordmark">PortareOS</h1>
-    <p class="tagline">An opinionated Linux distribution for one device, the Retroid Pocket Nova.</p>
-    <p class="lead"><b>Black coffee without sugar and milk.<br>With the right amount of beans and water.</b></p>
-
-    <div class="actions">
-      <a class="button" href="https://github.com/portare-ch/portareos/releases">[ Download builds ]</a>
-      <a class="button" href="https://github.com/portare-ch/portareos">[ Source ]</a>
-    </div>
-  </header>
-
-  <hr>
-
-  <nav class="toc">
-    <a href="#why">Why</a> |
-    <a href="#look">Photos</a> |
-    <a href="#different">What is different</a> |
-    <a href="#rules">Rules</a> |
-    <a href="#get">Install</a> |
-    <a href="#specs">Hardware</a> |
-    <a href="emulators.html">Emulators</a> |
-    <a href="#credits">Credits</a>
-  </nav>
-
-  <hr>
-
-  <h2 id="why">Why PortareOS?</h2>
-
-  <p>The Retroid Pocket Nova has a <b>1280&times;960 panel at 120&nbsp;Hz</b>. That is 4:3, the shape of everything made before widescreen, and PortareOS exists to make the best possible operating system for the best 4:3 handheld on earth.</p>
-
-  <p>Write the card, copy the games across, and every system is already set up for this panel, this gamepad and this chip. Tweaking is not expected, and not encouraged. Everything that does not serve that is an anti-feature and comes out.</p>
-
-  <p class="callout"><b>Most distributions drive the panel at 60 or 120&nbsp;Hz and the audio at 48&nbsp;kHz, and resample everything to fit.</b> PortareOS changes the hardware to fit the console instead: one panel mode per console family, and an audio link at the console's own sample rate.</p>
-
-  <div class="quickfacts">
-    <div class="quickfact"><b>MATCHED REFRESH</b>A panel mode at exactly twice each console's frame rate. A frame lands on a frame.</div>
-    <div class="quickfact"><b>MATCHED AUDIO</b>48, 44.1 or 32&nbsp;kHz, following the console. No resampling where the link can carry the rate.</div>
-    <div class="quickfact"><b>KMS ONLY</b>No compositor. Every emulator, and the launcher, takes the panel itself.</div>
-    <div class="quickfact"><b>ONE EMULATOR</b>One tool for the job per system. Redundancies are dropped.</div>
-  </div>
-
-  <hr class="thin">
-
-  <h2 id="look">What it looks like</h2>
-
-  <figure class="shot">
-    <img src="images/snes-super-mario-world.jpg" alt="Super Mario World on the Nova: scanlines from crt-guest-advanced at an exact 4x, with the 32-pixel bars" loading="lazy">
-    <figcaption><b>Super Mario World.</b> The panel runs the SNES mode, 120.198&nbsp;Hz, two refreshes for every one of the game's 60.0988 frames, so nothing is dropped or repeated. crt-guest-advanced draws the scanlines over an exact 4&times;; the bars above and below are the price of even lines. The audio link is at 32&nbsp;kHz, the console's own rate.</figcaption>
-  </figure>
-
-  <figure class="shot">
-    <img src="images/movies-dvd-4-3.jpg" alt="A DVD rip playing in mpv, filling the 4:3 panel" loading="lazy">
-    <figcaption><b>A DVD rip.</b> mpv decodes H.264 on the hardware decoder and draws straight to the display, no compositor. The rip had lost its aspect flag; it is shown at 4:3 again, filling the panel, with scanlines for standard definition.</figcaption>
-  </figure>
-
-  <figure class="shot">
-    <img src="images/launcher.jpg" alt="The launcher: a list of systems with game counts, and the volume, brightness, battery and time in the header" loading="lazy">
-    <figcaption><b>The launcher.</b> Text on black, drawn by the CPU into a KMS buffer. Systems with games, the counts, and the four numbers that matter in the header.</figcaption>
-  </figure>
-
-  <hr class="thin">
-
-  <h2 id="different">What is different</h2>
-
-  <h3>Panel modes matched to the console</h3>
-  <p>The Nova has no variable refresh rate, so the panel driver carries one mode per console family, at exactly twice the console's frame rate. RetroArch asks for the matching mode when a game starts.</p>
-
-  <div class="tablewrap">
-    <table>
-      <caption>Panel modes</caption>
-      <tr><th>Mode</th><th>Console</th><th>Frame rate</th></tr>
-      <tr><td class="num">119.880 Hz</td><td>The 59.94&nbsp;Hz consoles: Dreamcast, PS2, PSP, GameCube, Xbox; and the default</td><td class="num">59.94</td></tr>
-      <tr><td class="num">119.635 Hz</td><td>PlayStation</td><td class="num">59.8173</td></tr>
-      <tr><td class="num">119.455 Hz</td><td>Game Boy, Game Boy Color, Game Boy Advance</td><td class="num">59.7275</td></tr>
-      <tr><td class="num">120.198 Hz</td><td>Super Nintendo</td><td class="num">60.0988</td></tr>
-    </table>
-  </div>
-  <p>The rates come from the consoles' own clocks, and the modes only vary the pixel clock, so the panel stays in its 120&nbsp;Hz class throughout. Switching mid-game was evaluated and dropped: SwanStation does not change rate the way a real PlayStation does, so there is nothing to follow.</p>
-
-  <h3>Audio at the console's sample rate</h3>
-  <p>The Nova's audio link runs at 48, 44.1 or 32&nbsp;kHz, following the stream. That took four kernel patches to unpin the DSP ports and derive the I2S bit clock from the stream, and each emulator asks for its console's rate.</p>
-
-  <p>Two more changes took the latency down with it. The DSP took audio in a fixed 480 frames at a time, which is 10&nbsp;ms only at 48&nbsp;kHz and 15 at the SNES's 32; it now takes 10&nbsp;ms of frames at whatever rate the stream runs. And the playback graph moved to the AudioReach endpoint that publishes a sample-accurate position, so the kernel stops calling the device batch and PipeWire stops keeping an extra period queued against a pointer that used to jump. A tester with a 240&nbsp;fps camera had found RetroArch's audio latency setting would not go below 32&nbsp;ms here without crackling; it now runs at <b>8&nbsp;ms</b>, which is as low as RetroArch itself allows.</p>
-
-  <p>That pull-mode endpoint is the path Android uses on this chip and mainline Linux does not. Filmed at 240&nbsp;fps against Android on the same device, button-to-sound now varies by <b>one frame here where Android varies by two</b>. The average is still a little behind, and bringing it down is ongoing.</p>
-
-  <div class="tablewrap">
-    <table>
-      <caption>Link rate by console</caption>
-      <tr><td class="num">44.1 kHz</td><td>PlayStation, Dreamcast, PSP, Neo Geo CD, every Sega system</td></tr>
-      <tr><td class="num">32 kHz</td><td>Super Nintendo</td></tr>
-      <tr><td class="num">48 kHz</td><td>PS2, Xbox, GameCube and Wii, and everything else</td></tr>
-    </table>
-  </div>
-  <p>The full table, with every emulator's output rate, is in <a href="https://github.com/portare-ch/portareos/blob/next/documentation/PER_DEVICE_DOCUMENTATION/SM8550/REFRESH_RATES.md">REFRESH_RATES.md</a>.</p>
-
-  <h3>KMS, no compositor</h3>
-  <p>Nothing draws through a compositor. Each program takes the panel itself:</p>
-  <ul>
-    <li><b>The launcher</b> owns the panel through KMS with a dumb buffer. No GPU, no images, text on black.</li>
-    <li><b>RetroArch</b> renders with Vulkan straight to the display (<code>VK_KHR_display</code>).</li>
-    <li><b>ARMSX2</b> does the same, through a patch of ours: the renderer had a direct-to-display path that no frontend ever reached, and the patch adds the branch that does. Qt runs offscreen and the GS takes the panel.</li>
-    <li><b>mpv</b> plays films through Vulkan direct to the display too, so a movie never passes through a compositor either.</li>
-    <li><b>xemu, ScummVM, PortMaster and Moonlight</b> run on SDL's KMS driver: there is no compositor in the image to give them a window.</li>
-    <li><b>Steam</b> is the one exception. It brings gamescope, its own compositor, on the DRM backend, because the Steam runtime cannot be recompiled.</li>
-  </ul>
-  <p>sway and EmulationStation are gone from the image.</p>
-
-  <h3>One emulator per system</h3>
-  <p>One tool for the job, and the best one wins. Where ROCKNIX shipped several emulators for a platform, one was picked and the rest dropped, together with the settings nobody had tuned for them.</p>
-
-  <div class="tablewrap">
-    <table>
-      <caption>Systems and their emulator</caption>
-      <tr><th>System</th><th>Emulator</th></tr>
-      <tr><td>Arcade, Neo Geo</td><td>FBNeo</td></tr>
-      <tr><td>Neo Geo CD</td><td>NeoCD</td></tr>
-      <tr><td>Game Boy, Game Boy Color</td><td>Gambatte</td></tr>
-      <tr><td>Game Boy Advance</td><td>mGBA</td></tr>
-      <tr><td>Super Nintendo</td><td>Snes9x (bsnes still under evaluation)</td></tr>
-      <tr><td>Nintendo 64</td><td>ParaLLEl N64 with ParaLLEl-RDP on Vulkan</td></tr>
-      <tr><td>GameCube, Wii</td><td>Dolphin</td></tr>
-      <tr><td>Master System, Game Gear, Mega Drive, Sega CD</td><td>Genesis Plus GX</td></tr>
-      <tr><td>32X</td><td>PicoDrive</td></tr>
-      <tr><td>Dreamcast, NAOMI, Atomiswave</td><td>Flycast</td></tr>
-      <tr><td>PlayStation</td><td>SwanStation</td></tr>
-      <tr><td>PlayStation 2</td><td>ARMSX2</td></tr>
-      <tr><td>PSP</td><td>PPSSPP</td></tr>
-      <tr><td>Xbox</td><td>xemu</td></tr>
-      <tr><td>Point-and-click</td><td>ScummVM</td></tr>
-      <tr><td>Ports, streaming, PC</td><td>PortMaster, Moonlight, Steam</td></tr>
-      <tr><td>Movies, music</td><td>mpv, gmu</td></tr>
-    </table>
-  </div>
-  <p>Every emulator quits with the same buttons, <b>Home + Start</b>. The <a href="emulators.html">emulators page</a> has every system with its folder and file types.</p>
-
-  <h3>Configured for this panel</h3>
-  <ul>
-    <li>4:3 with integer scaling where the console's lines divide into 960: Game Boy at 960&times;864, N64 at 2&times; on ParaLLEl-RDP, PlayStation at 4&times; with a CRT shader, the handheld LCD shaders for the Game Boy family.</li>
-    <li>Correct palettes and boot logos: a Game Boy Color game gets the GBC hardware and its colour correction.</li>
-    <li>No automatic savestate loading.</li>
-  </ul>
-
-  <h3>Movies at the right shape</h3>
-  <p>mpv is the video player. H.264 and HEVC decode on the Nova's hardware decoder, a few percent of one core for a 1080p stream. Standard-definition 4:3 rips that lost their aspect flag are shown at 4:3 again, and SD gets scanlines, because a DVD was made for a CRT. Position is saved on quit.</p>
-
-  <h3>Lightweight</h3>
-  <ul>
-    <li>The image is about 470&nbsp;MB compressed.</li>
-    <li>PipeWire and nothing else. PulseAudio is banned, and a check in CI fails the build if it comes back. The graph's minimum quantum is 256 frames, 5.3&nbsp;ms.</li>
-    <li>No EmulationStation, no sway, no artwork scraping, no media centre.</li>
-    <li>Wrappers and duplicate tools are removed as they are found.</li>
-  </ul>
-
-  <h3>Latency</h3>
-  <p>1000&nbsp;Hz tick, preemption model selectable at boot, the teo idle governor, schedutil with the chip's energy model, and the emulator frame queue kept as short as it goes: two swapchain images and automatic frame delay in RetroArch. The panel holds the mode it is given to better than a part per million, measured against the SoC's own clock rather than assumed, so the console rates above are what the display actually runs. Black frame insertion, which a 120&nbsp;Hz panel showing 60&nbsp;Hz content can afford, is work in progress.</p>
-
-  <h3>Kept current</h3>
-  <p>Kernel 7.2.5, Mesa 26.2.2, PipeWire 1.6.8 and RetroArch from a recent commit. A daily pull request moves the emulators to their upstream heads.</p>
-
-  <h3>The launcher</h3>
-  <p><a href="https://github.com/portare-ch/portarelauncher">portarelauncher</a> is the front-end: consoles, games, and a settings menu with Wi-Fi, Bluetooth, SSH, USB gadget mode, time zone, and updates. Updates come straight from GitHub over Wi-Fi, from the nightly or the release channel, and install on restart. Every device makes its own root password on first boot and shows it under About.</p>
-
-  <h3>Tuned for the device</h3>
-  <ul>
-    <li>Suspend, with a stack of kernel patches so UFS, PCIe, Wi-Fi, the gamepad MCU and the LEDs survive it.</li>
-    <li>microSD at UHS-I SDR104.</li>
-    <li>The lowest GPU operating point, 124.8&nbsp;MHz, so a menu or a film keeps the fan off.</li>
-  </ul>
-
-  <hr class="thin">
-
-  <h2 id="rules">The rules</h2>
-
-  <ul>
-    <li><b>One device.</b> Every other device tree has been deleted, not switched off.</li>
-    <li><b>One emulator per system.</b> Redundancies are dropped.</li>
-    <li><b>KMS is the only way to launch a game.</b> No compositing, except for Steam.</li>
-    <li><b>The console's rates, not the display's.</b> Refresh and sample rates are matched wherever the hardware can carry them.</li>
-    <li><b>Latency before everything except correctness.</b></li>
-    <li><b>Anti-features come out.</b> If it is not needed for a smooth game, it is not in the image.</li>
-  </ul>
-
-  <p>Ongoing: black frame insertion, the SNES core choice, further footprint reduction, and removing the remaining wrappers. <a href="https://github.com/portare-ch/portareos/blob/next/ROADMAP.md">ROADMAP.md</a> is where this is going and <a href="https://github.com/portare-ch/portareos/blob/next/BUGS.md">BUGS.md</a> is what is known to be broken or unfinished.</p>
-
-  <hr class="thin">
-
-  <h2 id="get">Getting it</h2>
-
-  <p class="callout"><b>Beta.</b> PortareOS is developed on one Nova. Read the release notes, and keep a known-good card around.</p>
-
-  <h3>1. Download a build</h3>
-  <p>Builds live on the <a href="https://github.com/portare-ch/portareos/releases">GitHub releases page</a>: a monthly release, and a nightly marked pre-release. Use the <code>.img.gz</code> file for a fresh card. The <code>.tar</code> file is for updating an existing PortareOS installation by hand.</p>
-
-  <details>
-    <summary>Verify the download</summary>
-    <p>Keep the image and its <code>.sha256</code> file in the same directory, then verify it before flashing:</p>
-    <pre><code>shasum -a 256 -c PortareOS-SM8550.aarch64-&lt;date&gt;.img.gz.sha256</code></pre>
-    <p>On Linux, use <code>sha256sum -c</code>.</p>
-  </details>
-
-  <h3>2. Write the microSD card</h3>
-  <p>Decompress the image and write it with Raspberry Pi Imager, balenaEtcher or another raw-image tool.</p>
-
-  <details>
-    <summary>Command line: macOS / Linux</summary>
-    <p><b>Check the target device carefully.</b> <code>dd</code> overwrites whatever you point it at.</p>
-    <pre><code>gunzip PortareOS-SM8550.aarch64-&lt;date&gt;.img.gz
-
-diskutil list
-diskutil unmountDisk /dev/disk4
-sudo dd if=PortareOS-SM8550.aarch64-&lt;date&gt;.img of=/dev/rdisk4 bs=4m</code></pre>
-    <p>On Linux, the card is usually <code>/dev/sdX</code> or <code>/dev/mmcblk0</code>; use <code>bs=4M status=progress conv=fsync</code>.</p>
-  </details>
-
-  <h3>3. Boot it</h3>
-  <p>Power the Nova off, insert the card, then hold <b>Volume Down</b> while powering on. In the boot menu choose <b>Switch boot mode</b>, confirm with the power button, then boot PortareOS.</p>
-
-  <details>
-    <summary>If your Nova has no boot menu</summary>
-    <p>The bootloader must be replaced first. Follow the <a href="https://rocknix.org/devices/retroid/retroid-pocket-nova/">ROCKNIX Nova guide</a> for the current <code>adb</code>/<code>fastboot</code> procedure rather than duplicating it here.</p>
-    <p><b>This is the risky step:</b> flashing the wrong bootloader can leave the handheld unable to boot.</p>
-  </details>
-
-  <h3>4. First boot</h3>
-  <p>Settings &gt; Wi-Fi joins a network. Settings &gt; About shows the root password this device made for itself; SSH is on, and <code>ssh root@&lt;address&gt;</code> logs in with it.</p>
-
-  <h3 id="updating">Updating later</h3>
-  <p><b>From the launcher:</b> Settings &gt; About &gt; Update asks GitHub what the chosen channel, nightly or release, has for this device, downloads it over Wi-Fi, and installs it on restart.</p>
-  <p><b>From a file:</b> put the PortareOS <code>.tar</code> in a folder named <b><code>UPD</code></b> on internal storage or a second card; it is staged and applied after reboot.</p>
-  <p><b>Fresh installs must start from a PortareOS image.</b> Do not install a PortareOS update tar over an existing ROCKNIX card; the boot partition labels differ.</p>
-
-  <details>
-    <summary>Build it yourself</summary>
-    <pre><code>git clone https://github.com/portare-ch/portareos
-cd portareos
-make docker-SM8550</code></pre>
-    <p>Images land in <code>target/</code>. A first build needs a container runtime, roughly 100&nbsp;GB of disk and several hours.</p>
-  </details>
-
-  <hr class="thin">
-
-  <h2 id="specs">Hardware</h2>
-
-  <div class="tablewrap">
-    <table>
-      <caption>Retroid Pocket Nova</caption>
-      <tr><th>SoC</th><td>Qualcomm QCS8550 (Snapdragon 8 Gen 2)</td></tr>
-      <tr><th>CPU</th><td class="num">1 &times; Cortex-X3, 4 &times; A710/A715, 3 &times; A510</td></tr>
-      <tr><th>GPU</th><td>Adreno 740, Freedreno / Mesa 26.2.2</td></tr>
-      <tr><th>Display</th><td class="num">1280 &times; 960, 4:3, OLED, 119.88 Hz and the matched modes above</td></tr>
-      <tr><th>Audio link</th><td class="num">48 / 44.1 / 32 kHz</td></tr>
-      <tr><th>Gamepad</th><td>rsinput MCU over UART</td></tr>
-      <tr><th>Kernel</th><td class="num">Linux 7.2.5</td></tr>
-    </table>
-  </div>
-
-  <hr class="thin">
-
-  <h2 id="credits">Credits</h2>
-
-  <p>PortareOS began as a fork of <a href="https://github.com/ROCKNIX/distribution">ROCKNIX</a>, itself a fork of <a href="https://github.com/JustEnoughLinuxOS/distribution">JELOS</a>, and much of the engineering underneath is theirs. It no longer tracks ROCKNIX. Please keep PortareOS bug reports with PortareOS rather than the ROCKNIX maintainers; for the upstream project, visit <a href="https://rocknix.org">rocknix.org</a>.</p>
-
-  <p>Several SM8550 kernel patches come from <a href="https://github.com/shuuri-labs/pocknix-os">pocknix-os</a> by shuuri-labs. Authorship is kept in the patch headers.</p>
-
-</div>
-
-<footer>
-  <div class="badges">
-    <span class="badge"><b>1280&times;960</b>best viewed at</span>
-    <span class="badge"><b>NO JS</b>not one line</span>
-    <span class="badge"><b>4:3</b>forever</span>
-  </div>
-  <div>Visitors: <span class="counter"><!--HITS-->0001247<!--/HITS--></span></div>
-  <div>Last updated 24 September 2026 &middot; <a href="https://github.com/portare-ch/portareos">source on GitHub</a></div>
-  <div style="color:#5a5f66;">PortareOS is not affiliated with or endorsed by ROCKNIX or Retroid.</div>
-</footer>
-
+  <main>
+    <h1>PortareOS</h1>
+    <nav aria-labelledby="quick-access">
+      <h2 id="quick-access">Quick access</h2>
+      <a href="https://github.com/portare-ch/portareos">
+        <span class="cursor" aria-hidden="true">&#9656;</span>
+        <span>PortareOS on GitHub</span>
+      </a>
+    </nav>
+    <footer>
+      <span><kbd>Tab</kbd> Select</span>
+      <span><kbd>Enter</kbd> Open</span>
+    </footer>
+  </main>
 </body>
 </html>
